@@ -1,8 +1,9 @@
 [package]
-name    = "bedrock"
-version = "0.0.0"
-authors = ["Achernar", "Gabriel Bjørnager Jensen"]
-edition = "2024"
+name       = "bedrock"
+version    = "0.1.0"
+authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
+edition    = "2024"
+repository = "ssh://git@ssh.mandelbrot.dk:bedrock"
 
 [workspace.lints.clippy]
 arc_with_non_send_sync             = "forbid"
@@ -85,6 +86,7 @@ match_same_arms                    = "warn"
 mismatching_type_param_order       = "warn"
 missing_transmute_annotations      = "forbid"
 mixed_read_write_in_expression     = "forbid"
+module_inception                   = "allow"
 mut_mut                            = "warn"
 mutex_atomic                       = "forbid"
 mutex_integer                      = "forbid"
