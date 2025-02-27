@@ -3,19 +3,36 @@
 use crate::level::{Block, Map};
 
 use std::iter::FusedIterator;
+use std::marker::PhantomData;
 use std::slice;
 
 #[must_use]
 #[derive(Debug)]
 pub struct ColumnsMut<'a> {
-	iter: slice::IterMut<'a, Box<[Block]>>,
+	height: u32,
+
+	len: u32,
+	ptr: *mut Block,
+
+	_map: PhantomData<&'a mut Map>,
 }
 
 impl<'a> ColumnsMut<'a> {
 	#[inline(always)]
 	pub(super) fn new(map: &'a mut Map) -> Self {
-		let iter = map.data.iter_mut();
-		Self { iter }
+		let height = map.height();
+
+		let len = map.width();
+		let ptr = map.as_mut_ptr();
+
+		Self {
+			height,
+
+			len,
+			ptr,
+
+			_map: PhantomData,
+		}
 	}
 }
 
@@ -28,6 +45,22 @@ impl<'a> Iterator for ColumnsMut<'a> {
 
 	#[inline(always)]
 	fn next(&mut self) -> Option<Self::Item> {
-		self.iter.next().map(|column| &mut **column)
+		if self.len == 0x0 { return None };
+
+		let height = self.height as usize;
+
+		// SAFETY: We guarantee that the lengths of map
+		// buffers are always a multiple of the map's
+		// height. We have also in this case tested that
+		// there are remaining columnsMut. We are also
+		// guaranteed to exclusively access the buffer
+		// thanks to `self._map`.
+		let data = unsafe { slice::from_raw_parts_mut(self.ptr, height) };
+
+		self.ptr = unsafe { self.ptr.add(height) };
+
+		self.len -= 0x1;
+
+		Some(data)
 	}
 }

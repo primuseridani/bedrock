@@ -1,17 +1,17 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod block;
+mod chunk;
 mod columns;
 mod columns_mut;
-mod level_generator;
+mod level;
 mod map;
-mod map_iter;
-mod map_iter_mut;
+mod map_size;
 
 pub use block::Block;
+pub use chunk::Chunk;
 pub use columns::Columns;
 pub use columns_mut::ColumnsMut;
-pub use level_generator::LevelGenerator;
+pub use level::Level;
 pub use map::Map;
-pub use map_iter::MapIter;
-pub use map_iter_mut::MapIterMut;
+pub use map_size::MapSize;

@@ -1,71 +1,119 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::app::Config;
-use crate::level::{LevelGenerator, Map};
+mod load_level;
+mod regenerate_level;
+mod run;
 
-use std::mem::swap;
-use std::thread::sleep_until;
-use std::time::{Duration, Instant};
+use crate::app::Config;
+use crate::error::{Error, Result};
+use crate::level::Map;
+
+use std::fs::{create_dir_all, write};
+use std::path::PathBuf;
+
+#[allow(deprecated)]
+use std::env::home_dir;
 
 #[derive(Debug)]
 pub struct App {
 	config: Config,
 
-	level_generator: LevelGenerator,
+	data_dir: PathBuf,
+
+	map: Map,
 }
 
 impl App {
-	#[must_use]
-	pub fn new(config: Config) -> Self {
-		assert!(config.map_size.0 % 0x2 == 0x0);
-		assert!(config.map_size.1 % 0x2 == 0x0);
+	pub fn new() -> Result<Self> {
+		let data_dir = Self::get_data_dir()?;
 
-		let level_generator = Self::load_level_generator(&config.level_generator);
+		let this = Self {
+			config: Default::default(),
 
-		Self {
-			config,
+			data_dir,
 
-			level_generator,
-		}
+			map: Default::default(),
+		};
+		Ok(this)
 	}
 
-	fn load_level_generator(name: &str) -> LevelGenerator {
-		match name {
-			"field" => LevelGenerator::FIELD,
+	#[allow(deprecated)]
+	fn get_data_dir() -> Result<PathBuf> {
+		let mut data_dir = home_dir().ok_or(Error::MissingDataDir)?;
 
-			_ => panic!("invalid level generator \"{name}\""),
+		#[cfg(target_family = "unix")]
+		let data_dir = {
+			data_dir.push(".local");
+			data_dir.push("share");
+			data_dir.push("bedrock");
+
+			data_dir
+		};
+
+		#[cfg(target_family = "windows")]
+		let data_dir = {
+			data_dir.push("AppData");
+			data_dir.push("Roaming");
+			data_dir.push("Bedrock");
+
+			data_dir
+		};
+
+		eprintln!("creating data directory at `{}", data_dir.display());
+
+		create_dir_all(&data_dir)
+			.map_err(|_| Error::MissingDataDir)?;
+
+		let subdirs = [
+			"level",
+		];
+
+		for subdir in subdirs {
+			let subdir = data_dir.join(subdir);
+
+			eprintln!("creating subdirectory at `{}", subdir.display());
+
+			create_dir_all(&subdir)
+				.map_err(|_| Error::MissingDataDir)?;
 		}
-	}
 
-	pub fn run(self) {
-		eprintln!("you have hit bedrock");
+		let test_level_path = {
+			let mut path = data_dir.to_owned();
 
-		let mut map = self.level_generator.generate(self.config.map_size.0, self.config.map_size.1);
+			path.push("level");
+			path.push("test");
+			path.set_extension("toml");
 
-		const TICK_DURATION: Duration = Duration::from_millis(250);
+			path
+		};
 
-		let mut tick_start;
+		eprintln!("writing test level to `{}`", test_level_path.display());
 
-		loop {
-			tick_start = Instant::now();
+		let _ = write(test_level_path, TEST_LEVEL);
 
-			let next_tick = tick_start + TICK_DURATION;
-
-			self.tick(&mut map);
-
-			sleep_until(next_tick);
-		}
-	}
-
-	fn tick(&self, map: &mut Map) {
-		for column in map.columns_mut() {
-			for cells in column.chunks_exact_mut(0x2) {
-				let [cell, next_cell] = cells else { unreachable!() };
-
-				if *next_cell == Default::default() {
-					swap(next_cell, cell);
-				}
-			}
-		}
+		Ok(data_dir)
 	}
 }
+
+const TEST_LEVEL: &str =
+r#"[level]
+name        = "test"
+authour     = "Achernar"
+description = "A test level."
+
+[[chunk]]
+terrain_height = 0.0625
+
+ground = "sand"
+
+[[chunk]]
+terrain_height = 0.125
+
+ground = "dirt"
+
+[[chunk]]
+terrain_height = 0.25
+
+ground = "stone"
+
+"#;

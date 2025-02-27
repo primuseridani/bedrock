@@ -3,6 +3,16 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.2.0
+
+* Restructure code
+* Support loading of custom levels
+* Improve error handling
+* Add more built-in levels
+* Update level structure
+* Add more block types
+* Add logo
+
 ## 0.1.0
 
 * Add configuration

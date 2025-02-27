@@ -1,9 +1,13 @@
 [package]
 name       = "bedrock"
-version    = "0.1.0"
+version    = "0.2.0"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "ssh://git@ssh.mandelbrot.dk:bedrock"
+
+[dependencies]
+rand      = "0.9"
+thiserror = "2.0"
 
 [workspace.lints.clippy]
 arc_with_non_send_sync             = "forbid"

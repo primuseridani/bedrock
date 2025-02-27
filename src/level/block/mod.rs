@@ -10,4 +10,13 @@ pub enum Block {
 	Stone,
 	Dirt,
 	Sand,
+	Water,
+	Granite,
+	Magma, // Or `Lava`?
+	Basalt,
+	Clay,
+	Gravel,
+	Marble,
+	Limestone,
+	Grass,
 }
