@@ -1,70 +1,41 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use rand::random;
-
-use crate::app::App;
+use crate::app::{App, Event};
 use crate::error::Result;
-use crate::level::Block;
 
-use std::mem::swap;
-use std::thread::sleep_until;
-use std::time::{Duration, Instant};
+use winit::event_loop::{ControlFlow, EventLoop, EventLoopProxy};
 
 impl App {
 	pub fn run(mut self) -> Result<()> {
-		eprintln!("you have hit bedrock");
+		self.print_welcome_message();
 
-		Self::regenerate_level(
-			&mut self.map,
-			&self.config.level,
-			self.config.map_size,
-		);
+		let level = self.load_level("valley")?;
+		self.regenerate_level(&level, self.config.map_size);
 
-		const TICK_DURATION: Duration = Duration::from_millis(250);
+		eprintln!("creating event loop");
 
-		let mut tick_start;
+		let event_loop = match EventLoop::with_user_event().build() {
+			Ok(event_loop) => event_loop,
 
-		loop {
-			tick_start = Instant::now();
+			Err(e) => panic!("unable to create event loop: {e}"),
+		};
 
-			let next_tick = tick_start + TICK_DURATION;
+		event_loop.set_control_flow(ControlFlow::Poll);
 
-			self.tick();
+		Self::set_terminate_handler(event_loop.create_proxy());
 
-			sleep_until(next_tick);
-		}
+		event_loop.run_app(&mut self).unwrap();
+
+		Ok(())
 	}
 
-	fn tick(&mut self) {
-		let seed = random::<u32>();
+	fn set_terminate_handler(event_loop: EventLoopProxy<Event>) {
+		eprintln!("setting terminate handler");
 
-		for column in self.map.columns_mut() {
-			for cells in column.chunks_exact_mut(0x2) {
-				let [cell, next_cell] = cells else { unreachable!() };
-
-				match (*cell, *next_cell) {
-					(Block::Air, other)
-					if other != Block::Air
-					=> {
-						swap(cell, next_cell);
-					}
-
-					(Block::Grass, other)
-					if other != Block::Air
-					&& seed >= 0x3FFFFFFF
-					=> {
-						*cell = Block::Dirt;
-					}
-
-					(Block::Magma, Block::Air)
-					if seed >= 0x3FFFFFFF
-					=> {
-						*cell = Block::Basalt;
-					}
-
-					_ => { }
-				}
-			}
-		}
+		ctrlc::set_handler(move || {
+			event_loop
+				.send_event(Event::Terminate)
+				.expect("unable to send terminate event");
+		}).expect("unable to set terminate handler");
 	}
 }

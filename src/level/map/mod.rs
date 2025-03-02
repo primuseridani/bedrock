@@ -2,11 +2,13 @@
 
 use crate::level::{Block, Columns, ColumnsMut, MapSize};
 
+use std::hint::assert_unchecked;
 use std::mem::swap;
+use std::num::NonZero;
 use std::ops::{Index, IndexMut};
 use std::slice;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Map {
 	height: u32,
 	data:   Box<[Block]>,
@@ -87,14 +89,37 @@ impl Map {
 	#[inline(always)]
 	#[must_use]
 	pub fn height(&self) -> u32 {
-		self.height
+		let height = self.height;
+
+		unsafe { assert_unchecked(height != 0x0) };
+		unsafe { assert_unchecked(height % 0x2 == 0x0) };
+
+		height
 	}
 
 	#[inline(always)]
 	#[must_use]
 	pub fn width(&self) -> u32 {
-		let height = self.height() as usize;
-		(self.data.len() / height) as u32
+		// SAFETY: This is guaranteed for compatibility
+		// with `MapSize`.
+		let height = unsafe { NonZero::new_unchecked(self.height() as usize) };
+
+		// NOTE: We always guarantee that the buffer's
+		// total length is a multiple of `height`.
+		let width = (self.data.len() / height) as u32;
+
+		unsafe { assert_unchecked(width % 0x2 == 0x0) };
+
+		width
+	}
+
+	#[inline(always)]
+	#[must_use]
+	pub fn size(&self) -> MapSize {
+		let height = self.height();
+		let width  = self.width();
+
+		unsafe { MapSize::new_unchecked(width, height) }
 	}
 
 	#[inline(always)]
@@ -107,6 +132,13 @@ impl Map {
 	#[must_use]
 	pub fn as_mut_ptr(&mut self) -> *mut Block {
 		self.data.as_mut_ptr()
+	}
+}
+
+impl Default for Map {
+	#[inline(always)]
+	fn default() -> Self {
+		Self::new(Default::default())
 	}
 }
 

@@ -2,30 +2,91 @@
 
 use crate::app::App;
 use crate::error::{Error, Result};
-use crate::level::Level;
+use crate::level::{Chunk, Level};
 
-use std::path::Path;
+use serde::Deserialize;
+use std::fs::read_to_string;
+
+#[derive(Debug, Deserialize)]
+struct LevelHelper {
+	pub level: LevelLevelHelper,
+
+	pub chunk: Vec<LevelChunkHelper>,
+}
+
+#[derive(Debug, Deserialize)]
+struct LevelLevelHelper {
+	pub name:        String,
+	pub creatour:    String,
+	pub description: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct LevelChunkHelper {
+	pub terrain_height: f64,
+	pub ground:         String,
+}
 
 impl App {
-	pub(super) fn load_level(base_dir: &Path, name: &str) -> Result<Level> {
+	pub(super) fn load_level(&self, name: &str) -> Result<Level> {
 		// Firstly check if the level is a built-in.
 
-		if let Some(level) = Level::load_builtin(name) { return Ok(level) };
+		let level = if let Some(level) = Level::load_builtin(name) {
+			eprintln!("loading built-in level \"{name}\"");
 
-		let path = {
-			let mut path = base_dir.to_owned();
+			level
+		} else {
+			let path = {
+				let mut path = self.data_dir.to_owned();
 
-			path.push("level");
-			path.push(name);
-			path.set_extension("toml");
+				path.push("level");
+				path.push(name);
+				path.set_extension("toml");
 
-			path
+				path
+			};
+
+			eprintln!("loading level at \"{}\"", path.display());
+
+			let file = read_to_string(&path)
+				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
+
+			let helper = toml::from_str::<LevelHelper>(&file)
+				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
+
+			let chunks = helper
+				.chunk
+				.into_iter()
+				.map(|chunk_helper| {
+					let chunk = Chunk {
+						terrain_height: chunk_helper.terrain_height,
+
+						ground: {
+							chunk_helper
+								.ground
+								.parse()
+								.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?
+						}
+					};
+
+					Ok(chunk)
+				})
+				.collect::<Result<_>>()?;
+
+			Level {
+				name:        helper.level.name,
+				creatour:    helper.level.creatour,
+				description: helper.level.description,
+
+				chunks,
+			}
 		};
 
-		eprintln!("loading level at \"{}\"", path.display());
+		eprintln!("note: loaded level:");
+		eprintln!("```");
+		eprintln!("{level:#?}");
+		eprintln!("```");
 
-		// Do not actually load it for now.
-
-		Err(Error::UnknownLevel { name: name.into() })
+		Ok(level)
 	}
 }

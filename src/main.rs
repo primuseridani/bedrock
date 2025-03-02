@@ -1,13 +1,16 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+#![feature(float_gamma)]
 #![feature(thread_sleep_until)]
 
 mod app;
 mod error;
 mod level;
+mod version;
 
 use crate::app::App;
 use crate::error::Result;
+
 
 use std::process::exit;
 

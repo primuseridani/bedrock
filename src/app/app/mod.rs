@@ -1,10 +1,14 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+mod application_handler;
+mod handle_key_event;
 mod load_level;
+mod print_welcome_message;
 mod regenerate_level;
 mod run;
+mod tick;
 
-use crate::app::Config;
+use crate::app::{Config, GraphicsContext};
 use crate::error::{Error, Result};
 use crate::level::Map;
 
@@ -21,6 +25,8 @@ pub struct App {
 	data_dir: PathBuf,
 
 	map: Map,
+
+	graphics_context: Option<GraphicsContext>,
 }
 
 impl App {
@@ -33,7 +39,10 @@ impl App {
 			data_dir,
 
 			map: Default::default(),
+
+			graphics_context: Default::default(),
 		};
+
 		Ok(this)
 	}
 
@@ -59,7 +68,7 @@ impl App {
 			data_dir
 		};
 
-		eprintln!("creating data directory at `{}", data_dir.display());
+		eprintln!("creating data directory at \"{}\"", data_dir.display());
 
 		create_dir_all(&data_dir)
 			.map_err(|_| Error::MissingDataDir)?;
@@ -71,7 +80,7 @@ impl App {
 		for subdir in subdirs {
 			let subdir = data_dir.join(subdir);
 
-			eprintln!("creating subdirectory at `{}", subdir.display());
+			eprintln!("creating subdirectory at \"{}\"", subdir.display());
 
 			create_dir_all(&subdir)
 				.map_err(|_| Error::MissingDataDir)?;
@@ -87,7 +96,7 @@ impl App {
 			path
 		};
 
-		eprintln!("writing test level to `{}`", test_level_path.display());
+		eprintln!("writing test level to \"{}\"", test_level_path.display());
 
 		let _ = write(test_level_path, TEST_LEVEL);
 
@@ -98,7 +107,7 @@ impl App {
 const TEST_LEVEL: &str =
 r#"[level]
 name        = "test"
-authour     = "Achernar"
+creatour    = "Achernar"
 description = "A test level."
 
 [[chunk]]

@@ -1,17 +1,17 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::app::App;
-use crate::level::{Block, Level, Map, MapSize};
+use crate::level::{Block, Level, MapSize};
 
 impl App {
-	pub(super) fn regenerate_level(map: &mut Map, level: &Level, size: MapSize) {
+	pub(super) fn regenerate_level(&mut self, level: &Level, size: MapSize) {
 		eprintln!("generating level using preset \"{}\"", level.name);
 
 		assert!(!level.chunks.is_empty());
 
 		assert!(level.chunks.len() <= u8::MAX as usize);
 
-		map.resize(size);
+		self.map.resize(size);
 
 		let mut chunks = level.chunks.iter();
 
@@ -21,7 +21,8 @@ impl App {
 		let mut chunk_stop  = 0x0u32;
 		let mut chunk       = None;
 
-		let columns = map
+		let columns = self
+			.map
 			.columns_mut()
 			.enumerate()
 			.map(|(x, column)| (x as u32, column));
