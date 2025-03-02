@@ -1,6 +1,6 @@
 [package]
 name       = "bedrock"
-version    = "0.3.0"
+version    = "0.3.1"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "ssh://git@ssh.mandelbrot.dk:bedrock"

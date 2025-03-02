@@ -3,6 +3,12 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.3.1
+
+* Add desktop entry
+* Add readme
+* Add installation script
+
 ## 0.3.0
 
 * Finalise custom level loading

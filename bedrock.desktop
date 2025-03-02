@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Bedroc"
+GenericName=Artillery Game
+Icon=bedrock
+Exec=bedrock
+Categories=Game;StrategyGame;X-ArtilleryGame;
+SingleMainWindow=true
