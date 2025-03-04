@@ -1,30 +1,47 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::app::GraphicsContext;
+use crate::graphics::GraphicsContext;
+use crate::level::Map;
 
 use std::f64;
 use std::iter;
 use std::time::{SystemTime, UNIX_EPOCH};
 use wgpu::{
 	Color,
+	CommandEncoderDescriptor,
 	LoadOp,
 	Operations,
 	RenderPassColorAttachment,
 	RenderPassDescriptor,
 	StoreOp,
+	TextureViewDescriptor,
 };
 
 impl GraphicsContext {
-	pub fn render(&mut self) {
+	pub fn render(&mut self, _map: &Map) {
 		let output = match self.surface.get_current_texture() {
 			Ok(output) => output,
 
 			Err(e) => panic!("unable to get current texture: {e}"),
 		};
 
-		let view = output.texture.create_view(&Default::default());
+		let view = {
+			let descriptor = TextureViewDescriptor {
+				label: Some("main"),
 
-		let mut encoder = self.device.create_command_encoder(&Default::default());
+				..Default::default()
+			};
+
+			output.texture.create_view(&descriptor)
+		};
+
+		let mut encoder = {
+			let descriptor = CommandEncoderDescriptor {
+				label: Some("main"),
+			};
+
+			self.device.create_command_encoder(&descriptor)
+		};
 
 		let colour = {
 			let time = SystemTime::now()
@@ -32,27 +49,38 @@ impl GraphicsContext {
 				.unwrap()
 				.as_secs_f64();
 
-			let hue = time / 4.0;
+			let hue = time / 8.0;
 
 			hsva(hue, 1.0, 1.0, 1.0)
 		};
 
-		let _ = encoder.begin_render_pass(&RenderPassDescriptor {
-			color_attachments: &[
-				Some(RenderPassColorAttachment {
-					view:           &view,
-					resolve_target: None,
+		{
+			let descriptor = RenderPassDescriptor {
+				label: Some("main"),
 
-					ops: Operations {
-						load: LoadOp::Clear(colour),
+				color_attachments: &[
+					Some(RenderPassColorAttachment {
+						view:           &view,
+						resolve_target: None,
 
-						store: StoreOp::Store,
-					},
-				}),
-			],
+						ops: Operations {
+							load: LoadOp::Clear(colour),
 
-			..Default::default()
-		});
+							store: StoreOp::Store,
+						},
+					}),
+				],
+
+				..Default::default()
+			};
+
+			let mut pass = encoder.begin_render_pass(&descriptor);
+
+			pass.set_pipeline(&self.pipeline);
+			pass.set_vertex_buffer(0x0, self.vertex_buf.slice(..));
+
+			pass.draw(0x0..self.vertex_count, 0x0..0x1);
+		}
 
 		self.queue.submit(iter::once(encoder.finish()));
 

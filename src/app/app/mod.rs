@@ -8,8 +8,9 @@ mod regenerate_level;
 mod run;
 mod tick;
 
-use crate::app::{Config, GraphicsContext};
+use crate::config::Config;
 use crate::error::{Error, Result};
+use crate::graphics::GraphicsContext;
 use crate::level::Map;
 
 use std::fs::{create_dir_all, write};
@@ -98,31 +99,8 @@ impl App {
 
 		eprintln!("writing test level to \"{}\"", test_level_path.display());
 
-		let _ = write(test_level_path, TEST_LEVEL);
+		let _ = write(test_level_path, include_str!("test_level.toml"));
 
 		Ok(data_dir)
 	}
 }
-
-const TEST_LEVEL: &str =
-r#"[level]
-name        = "test"
-creatour    = "Achernar"
-description = "A test level."
-
-[[chunk]]
-terrain_height = 0.0625
-
-ground = "sand"
-
-[[chunk]]
-terrain_height = 0.125
-
-ground = "dirt"
-
-[[chunk]]
-terrain_height = 0.25
-
-ground = "stone"
-
-"#;

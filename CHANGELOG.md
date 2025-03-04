@@ -3,6 +3,11 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-0
+
+* Update graphics demo
+* Restructure code
+
 ## 0.3.1
 
 * Add desktop entry

@@ -3,11 +3,11 @@
 <svg height="96" width="96" xmlns="http://www.w3.org/2000/svg">
 	<rect fill="#060606" height="100%" width="100%" x="0" y="0" /> <!-- 0% -->
 
-	<polygon fill="#222222" points="96,0 96,80 48,48" />
-	<polygon fill="#414141" points="48,48 96,48 96,96 80,96" />
-	<polygon fill="#636363" points="48,48 96,96 24,96" />
-	<polygon fill="#878787" points="48,48 48,96 0,96 0,80" />
-	<polygon fill="#AEAEAE" points="0,24 48,48 0,96" />
-	<polygon fill="#D6D6D6" points="0,0 24,0 48,48 0,48" />
-	<polygon fill="#FFFFFF" points="2,0 48,0 48,48" />
+	<polygon fill="#222222" points="96,0 48,48 96,80" />
+	<polygon fill="#414141" points="48,48 80,96 96,96 96,48" />
+	<polygon fill="#636363" points="48,48 24,96 96,96" />
+	<polygon fill="#878787" points="48,48 0,80 0,96 48,96" />
+	<polygon fill="#AEAEAE" points="0,24 0,96 48,48" />
+	<polygon fill="#D6D6D6" points="0,0 0,48 48,48 24,0" />
+	<polygon fill="#FFFFFF" points="2,0 48,48 48,0" />
 </svg>

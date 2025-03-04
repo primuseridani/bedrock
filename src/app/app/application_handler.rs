@@ -1,8 +1,8 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::app::{App, Event, GraphicsContext};
+use crate::app::{App, Event};
+use crate::graphics::GraphicsContext;
 
-use pollster::block_on;
 use winit::application::ApplicationHandler;
 use winit::event::{StartCause, WindowEvent};
 use winit::event_loop::ActiveEventLoop;
@@ -12,7 +12,7 @@ impl ApplicationHandler<Event> for App {
 	fn resumed(&mut self, event_loop: &ActiveEventLoop) {
 		if self.graphics_context.is_some() { return };
 
-		let graphics_context = block_on(GraphicsContext::new(event_loop));
+		let graphics_context = GraphicsContext::new(event_loop);
 		self.graphics_context = Some(graphics_context);
 	}
 
@@ -36,7 +36,7 @@ impl ApplicationHandler<Event> for App {
 			WindowEvent::RedrawRequested => {
 				let graphics_context = self.graphics_context.as_mut().unwrap();
 
-				graphics_context.render();
+				graphics_context.render(&self.map);
 			}
 
 			WindowEvent::Resized(size) => {
