@@ -1,5 +1,6 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+#![feature(generic_arg_infer)]
 #![feature(thread_sleep_until)]
 
 // Why is this needed?

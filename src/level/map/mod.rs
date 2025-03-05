@@ -42,8 +42,6 @@ impl Map {
 		let mut data = data.into();
 
 		swap(&mut data, &mut self.data);
-
-
 	}
 
 	#[allow(unused)]

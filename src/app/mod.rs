@@ -3,5 +3,6 @@
 mod app;
 mod event;
 
+use event::Event;
+
 pub use app::App;
-pub use event::Event;

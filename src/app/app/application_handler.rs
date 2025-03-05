@@ -36,7 +36,7 @@ impl ApplicationHandler<Event> for App {
 			WindowEvent::RedrawRequested => {
 				let graphics_context = self.graphics_context.as_mut().unwrap();
 
-				graphics_context.render(&self.map);
+				graphics_context.render(&self.map, self.view_scale);
 			}
 
 			WindowEvent::Resized(size) => {

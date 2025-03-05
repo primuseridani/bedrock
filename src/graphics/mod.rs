@@ -1,14 +1,20 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod graphics_context;
-mod vec4;
+mod rgba;
+mod vec2;
 mod vertex;
-
-use vec4::Vec4;
-use vertex::Vertex;
 
 pub use graphics_context::GraphicsContext;
 
-use wgpu::{include_wgsl, ShaderModuleDescriptor};
+use rgba::Rgba;
+use vec2::Vec2;
+use vertex::Vertex;
 
-const MAIN_SHADER: ShaderModuleDescriptor = include_wgsl!("main.wgsl");
+pub const MAX_VIEW_SCALE: u32 = 0x100;
+
+const MAIN_SHADER: &str = concat!(
+	include_str!("prelude.wgsl"),
+	include_str!("main.vert.wgsl"),
+	include_str!("main.frag.wgsl"),
+);

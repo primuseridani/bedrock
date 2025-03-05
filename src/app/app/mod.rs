@@ -21,13 +21,15 @@ use std::env::home_dir;
 
 #[derive(Debug)]
 pub struct App {
-	config: Config,
-
 	data_dir: PathBuf,
+
+	config: Config,
 
 	map: Map,
 
 	graphics_context: Option<GraphicsContext>,
+
+	view_scale: u32,
 }
 
 impl App {
@@ -35,11 +37,13 @@ impl App {
 		let data_dir = Self::get_data_dir()?;
 
 		let this = Self {
-			config: Default::default(),
-
 			data_dir,
 
+			config: Default::default(),
+
 			map: Default::default(),
+
+			view_scale: 0x1,
 
 			graphics_context: Default::default(),
 		};
