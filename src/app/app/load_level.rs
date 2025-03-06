@@ -3,6 +3,7 @@
 use crate::app::App;
 use crate::error::{Error, Result};
 use crate::level::{Chunk, Level};
+use crate::log::log;
 
 use serde::Deserialize;
 use std::fs::read_to_string;
@@ -31,11 +32,15 @@ impl App {
 	pub(super) fn load_level(&self, name: &str) -> Result<Level> {
 		// Firstly check if the level is a built-in.
 
+		log!("loading level \"{name}\"");
+
 		let level = if let Some(level) = Level::load_builtin(name) {
-			eprintln!("loading built-in level \"{name}\"");
+			log!(debug, "loading built-in level \"{name}\"");
 
 			level
 		} else {
+			log!(note, "level is not a built-in");
+
 			let path = {
 				let mut path = self.data_dir.to_owned();
 
@@ -46,7 +51,7 @@ impl App {
 				path
 			};
 
-			eprintln!("loading level at \"{}\"", path.display());
+			log!(debug, "loading level at \"{}\"", path.display());
 
 			let file = read_to_string(&path)
 				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
@@ -82,10 +87,7 @@ impl App {
 			}
 		};
 
-		eprintln!("note: loaded level:");
-		eprintln!("```");
-		eprintln!("{level:#?}");
-		eprintln!("```");
+		log!(note, "loaded level:\n```\n{level:#?}\n```");
 
 		Ok(level)
 	}

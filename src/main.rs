@@ -13,14 +13,16 @@ mod config;
 mod error;
 mod graphics;
 mod level;
+mod log;
 mod version;
 
-use crate::app::App;
-use crate::error::Result;
-
-use std::process::exit;
-
 fn main() -> ! {
+	use crate::app::App;
+	use crate::error::Result;
+	use crate::log::log;
+
+	use std::process::exit;
+
 	let run = || -> Result<()> {
 		let app = App::new()?;
 		app.run()?;
@@ -29,7 +31,7 @@ fn main() -> ! {
 	};
 
 	let code = if let Err(e) = run() {
-		eprintln!("error: {e}");
+		log!(error, "{e}");
 
 		e.into()
 	} else {

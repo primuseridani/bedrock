@@ -6,7 +6,7 @@ use std::mem::offset_of;
 use zerocopy::{FromZeros, Immutable, IntoBytes, KnownLayout};
 
 #[repr(C)]
-#[derive(Clone, Debug, Default, FromZeros, Immutable, IntoBytes, KnownLayout, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, FromZeros, Immutable, IntoBytes, KnownLayout, PartialEq)]
 pub(super) struct Vertex {
 	pub clip:    Vec2,
 	pub texture: Vec2,

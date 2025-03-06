@@ -2,6 +2,7 @@
 
 use crate::app::{App, Event};
 use crate::graphics::GraphicsContext;
+use crate::log::log;
 
 use winit::application::ApplicationHandler;
 use winit::event::{StartCause, WindowEvent};
@@ -24,13 +25,17 @@ impl ApplicationHandler<Event> for App {
 	) {
 		match event {
 			WindowEvent::CloseRequested => {
-				eprintln!("got close request");
+				log!("got close request");
 
 				event_loop.exit();
 			}
 
-			WindowEvent::KeyboardInput { event, .. } => {
-				self.handle_key_event(event_loop, event);
+			WindowEvent::KeyboardInput { device_id, event, is_synthetic } => {
+				self.handle_keyboard_input(event_loop, device_id, event, is_synthetic);
+			}
+
+			WindowEvent::MouseWheel { device_id, delta, phase } => {
+				self.handle_mouse_wheel(event_loop, device_id, delta, phase);
 			}
 
 			WindowEvent::RedrawRequested => {
@@ -62,17 +67,17 @@ impl ApplicationHandler<Event> for App {
 	fn user_event(&mut self, event_loop: &ActiveEventLoop, event: Event) {
 		let Event::Terminate = event;
 
-		eprintln!("got terminate");
+		log!("got terminate");
 
 		event_loop.exit();
 	}
 
 	fn exiting(&mut self, _event_loop: &ActiveEventLoop) {
-		eprintln!("goodbye <3");
+		log!("goodbye <3");
 	}
 
 	fn memory_warning(&mut self, _event_loop: &ActiveEventLoop) {
-		eprintln!("got low memory warning");
-		eprintln!("note: we don't know what to do");
+		log!("got low memory warning");
+		log!(note, "we don't know what to do");
 	}
 }

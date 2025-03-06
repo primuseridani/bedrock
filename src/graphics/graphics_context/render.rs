@@ -1,27 +1,14 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{GraphicsContext, MAX_VIEW_SCALE};
+use crate::graphics::{GraphicsContext, Vec2, Vertex, MAX_VIEW_SCALE};
 use crate::level::Map;
 
 use rand::{Rng, rng};
 use std::iter;
-use wgpu::{
-	CommandEncoderDescriptor,
-	LoadOp,
-	Operations,
-	Origin3d,
-	RenderPassColorAttachment,
-	RenderPassDescriptor,
-	StoreOp,
-	TexelCopyTextureInfo,
-	TextureAspect,
-	TexelCopyBufferLayout,
-	TextureViewDescriptor,
-};
 use zerocopy::IntoBytes;
 
 impl GraphicsContext {
-	pub fn render(&mut self, _map: &Map, _scale: u32) {
+	pub fn render(&mut self, _map: &Map, scale: u32) {
 		let output = match self.surface.get_current_texture() {
 			Ok(output) => output,
 
@@ -29,7 +16,7 @@ impl GraphicsContext {
 		};
 
 		let view = {
-			let descriptor = TextureViewDescriptor {
+			let descriptor = wgpu::TextureViewDescriptor {
 				label: Some("main"),
 
 				..Default::default()
@@ -41,14 +28,14 @@ impl GraphicsContext {
 		rng().fill(self.texture_buf.as_mut_bytes());
 
 		self.queue.write_texture(
-			TexelCopyTextureInfo {
+			wgpu::TexelCopyTextureInfo {
 				texture:   &self.texture,
 				mip_level: 0x0,
-				origin:    Origin3d::ZERO,
-				aspect:    TextureAspect::All,
+				origin:    wgpu::Origin3d::ZERO,
+				aspect:    wgpu::TextureAspect::All,
 			},
 			self.texture_buf.as_bytes(),
-			TexelCopyBufferLayout {
+			wgpu::TexelCopyBufferLayout {
 				offset:         0x0,
 				bytes_per_row:  Some(MAX_VIEW_SCALE * 0x4),
 				rows_per_image: Some(MAX_VIEW_SCALE),
@@ -56,8 +43,52 @@ impl GraphicsContext {
 			Self::TEXTURE_EXTENT,
 		);
 
+		let (view_width, view_height) = {
+			let xy = scale as f32;
+
+			let (x_factor, y_factor) = self.scale_factor;
+
+			let x = xy * x_factor;
+			let y = xy * y_factor;
+
+			(x, y)
+		};
+
+		let top_left     = Vec2::new(       0.0,         0.0);
+		let bottom_left  = Vec2::new(       0.0, view_height);
+		let bottom_right = Vec2::new(view_width, view_height);
+		let top_right    = Vec2::new(view_width,         0.0);
+
+		let vertices = [
+			Vertex {
+				clip:    Vec2::new(-1.0,  1.0),
+				texture: top_left,
+				..Default::default()
+			},
+
+			Vertex {
+				clip:    Vec2::new(-1.0, -1.0),
+				texture: bottom_left,
+				..Default::default()
+			},
+
+			Vertex {
+				clip:    Vec2::new( 1.0, -1.0),
+				texture: bottom_right,
+				..Default::default()
+			},
+
+			Vertex {
+				clip:    Vec2::new( 1.0,  1.0),
+				texture: top_right,
+				..Default::default()
+			},
+		];
+
+		self.queue.write_buffer(&self.vertex_buf, 0x0, vertices.as_bytes());
+
 		let mut encoder = {
-			let descriptor = CommandEncoderDescriptor {
+			let descriptor = wgpu::CommandEncoderDescriptor {
 				label: Some("main"),
 			};
 
@@ -65,18 +96,18 @@ impl GraphicsContext {
 		};
 
 		{
-			let descriptor = RenderPassDescriptor {
+			let descriptor = wgpu::RenderPassDescriptor {
 				label: Some("main"),
 
 				color_attachments: &[
-					Some(RenderPassColorAttachment {
+					Some(wgpu::RenderPassColorAttachment {
 						view:           &view,
 						resolve_target: None,
 
-						ops: Operations {
-							load: LoadOp::Load,
+						ops: wgpu::Operations {
+							load: wgpu::LoadOp::Load,
 
-							store: StoreOp::Store,
+							store: wgpu::StoreOp::Store,
 						},
 					}),
 				],

@@ -3,6 +3,11 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-2
+
+* Support zooming with the (primary) mouse wheel
+* Update logging
+
 ## 0.4.0-1
 
 * Update graphics demo

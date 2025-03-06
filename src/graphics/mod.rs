@@ -11,7 +11,8 @@ use rgba::Rgba;
 use vec2::Vec2;
 use vertex::Vertex;
 
-pub const MAX_VIEW_SCALE: u32 = 0x100;
+pub const MIN_VIEW_SCALE: u32 = 0x010;
+pub const MAX_VIEW_SCALE: u32 = 0x400;
 
 const MAIN_SHADER: &str = concat!(
 	include_str!("prelude.wgsl"),

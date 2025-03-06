@@ -2,10 +2,11 @@
 
 use crate::app::App;
 use crate::level::{Block, Level, MapSize};
+use crate::log::log;
 
 impl App {
 	pub(super) fn regenerate_level(&mut self, level: &Level, size: MapSize) {
-		eprintln!("generating level using preset \"{}\"", level.name);
+		log!(debug, "generating level using preset \"{}\"", level.name);
 
 		assert!(!level.chunks.is_empty());
 

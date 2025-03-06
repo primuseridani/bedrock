@@ -11,6 +11,8 @@ use winit::window::Window;
 
 #[derive(Debug)]
 pub struct GraphicsContext {
+	scale_factor: (f32, f32),
+
 	pipeline: wgpu::RenderPipeline,
 
 	index_count: u32,

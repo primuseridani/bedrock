@@ -7,6 +7,7 @@ use crate::graphics::{
 	MAIN_SHADER,
 	MAX_VIEW_SCALE,
 };
+use crate::log::log;
 use crate::version::Version;
 
 use pollster::block_on;
@@ -16,19 +17,19 @@ use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::dpi::PhysicalSize;
 use winit::event_loop::ActiveEventLoop;
 use winit::window::WindowAttributes;
-use zerocopy::IntoBytes;
+use zerocopy::{FromZeros, IntoBytes};
 
 impl GraphicsContext {
 	#[must_use]
 	pub fn new(event_loop: &ActiveEventLoop) -> Self {
-		eprintln!("creating graphics context");
+		log!(debug, "creating graphics context");
 
 		let size = PhysicalSize {
 			width:  Self::DEFAULT_SIZE.0,
 			height: Self::DEFAULT_SIZE.1,
 		};
 
-		eprintln!("opening window");
+		log!(debug, "opening window");
 
 		let window = {
 			let title = format!("Bedrock {}", Version::CURRENT);
@@ -45,11 +46,11 @@ impl GraphicsContext {
 			}
 		};
 
-		eprintln!("creating wgpu instance");
+		log!(debug, "creating wgpu instance");
 
 		let instance = wgpu::Instance::new(&Default::default());
 
-		eprintln!("creating surface");
+		log!(debug, "creating surface");
 
 		let surface = unsafe {
 			let target = match wgpu::SurfaceTargetUnsafe::from_window(&*window) {
@@ -65,7 +66,7 @@ impl GraphicsContext {
 			}
 		};
 
-		eprintln!("creating adapter");
+		log!(debug, "creating adapter");
 
 		let adapter = {
 			let options = wgpu::RequestAdapterOptions {
@@ -88,7 +89,7 @@ impl GraphicsContext {
 			.copied()
 			.expect("unable to find srgb surface format");
 
-		eprintln!("creating device and queue");
+		log!(debug, "creating device and queue");
 
 		let (device, queue) = {
 			match block_on(adapter.request_device(&Default::default(), None)) {
@@ -98,7 +99,7 @@ impl GraphicsContext {
 			}
 		};
 
-		eprintln!("configuring surface");
+		log!(debug, "configuring surface");
 
 		let surface_config = wgpu::SurfaceConfiguration {
 			usage:                         wgpu::TextureUsages::RENDER_ATTACHMENT,
@@ -113,7 +114,7 @@ impl GraphicsContext {
 
 		surface.configure(&device, &surface_config);
 
-		eprintln!("creating shader module");
+		log!(debug, "creating shader module");
 
 		let shader = {
 			let descriptor = wgpu::ShaderModuleDescriptor {
@@ -124,7 +125,7 @@ impl GraphicsContext {
 			device.create_shader_module(descriptor)
 		};
 
-		eprintln!("creating texture");
+		log!(debug, "creating texture");
 
 		let texture = {
 			let descriptor = wgpu::TextureDescriptor {
@@ -134,7 +135,7 @@ impl GraphicsContext {
 				sample_count:    0x1,
 				dimension:       wgpu::TextureDimension::D2,
 				format:          wgpu::TextureFormat::Rgba8UnormSrgb,
-				usage:           wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+				usage:           wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::TEXTURE_BINDING,
 				view_formats:    Default::default(),
 			};
 
@@ -218,45 +219,21 @@ impl GraphicsContext {
 
 		let texture_buf = vec![Default::default(); MAX_VIEW_SCALE as usize * MAX_VIEW_SCALE as usize].into();
 
-		eprintln!("creating vertex buffer");
+		log!(debug, "creating vertex buffer");
 
 		let vertex_buf = {
-			let vertices = [
-				Vertex {
-					clip:    Vec2::new(-1.0,  1.0),
-					texture: Vec2::new( 0.0,  0.0),
-					..Default::default()
-				},
-
-				Vertex {
-					clip:    Vec2::new(-1.0, -1.0),
-					texture: Vec2::new( 0.0,  1.0),
-					..Default::default()
-				},
-
-				Vertex {
-					clip:    Vec2::new( 1.0, -1.0),
-					texture: Vec2::new( 1.0, 1.0),
-					..Default::default()
-				},
-
-				Vertex {
-					clip:    Vec2::new( 1.0,  1.0),
-					texture: Vec2::new( 1.0, 0.0),
-					..Default::default()
-				},
-			];
+			let vertices = [Vertex::new_zeroed(); 0x8];
 
 			let descriptor = BufferInitDescriptor {
 				label:    Some("main"),
 				contents: vertices.as_bytes(),
-				usage:    wgpu::BufferUsages::VERTEX,
+				usage:    wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::VERTEX,
 			};
 
 			device.create_buffer_init(&descriptor)
 		};
 
-		eprintln!("creating index buffer");
+		log!(debug, "creating index buffer");
 
 		let (index_count, index_buf) = {
 			let indices: [u16; _] = [
@@ -276,7 +253,7 @@ impl GraphicsContext {
 			(count, buf)
 		};
 
-		eprintln!("creating render pipeline");
+		log!(debug, "creating render pipeline");
 
 		let pipeline = {
 			let descriptor = wgpu::PipelineLayoutDescriptor {
@@ -334,7 +311,9 @@ impl GraphicsContext {
 			device.create_render_pipeline(&descriptor)
 		};
 
-		Self {
+		let mut this = Self {
+			scale_factor: (1.0, 1.0),
+
 			pipeline,
 
 			index_count,
@@ -352,6 +331,10 @@ impl GraphicsContext {
 			surface,
 
 			window,
-		}
+		};
+
+		this.resize(size.width, size.height);
+
+		this
 	}
 }
