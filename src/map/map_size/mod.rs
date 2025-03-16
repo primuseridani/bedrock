@@ -60,6 +60,15 @@ impl MapSize {
 
 	#[inline(always)]
 	#[must_use]
+	pub const fn get(self) -> (u32, u32) {
+		let width  = self.width();
+		let height = self.height();
+
+		(width, height)
+	}
+
+	#[inline(always)]
+	#[must_use]
 	pub const fn width(self) -> u32 {
 		let width = self.width.get();
 
@@ -95,6 +104,6 @@ impl MapSize {
 impl Default for MapSize {
 	#[inline(always)]
 	fn default() -> Self {
-		Self::new(0x100, 0x90).unwrap()
+		Self::new(0x180, 0x100).unwrap()
 	}
 }

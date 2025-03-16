@@ -1,52 +1,79 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::BlockFromStrError;
+use crate::level::{BlockTags, Material};
 
-use std::str::FromStr;
-
-#[repr(u8)]
+#[repr(transparent)]
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-pub enum Block {
-	#[default]
-	Air,
+pub struct Block(u8);
 
-	Bedrock,
-	Stone,
-	Dirt,
-	Sand,
-	Water,
-	Granite,
-	Magma, // Or `Lava`?
-	Basalt,
-	Clay,
-	Gravel,
-	Marble,
-	Limestone,
-	Grass,
-}
+impl Block {
+	#[inline]
+	#[must_use]
+	pub const fn new(material: Material, seed: u8) -> Self {
+		let     material = material as u8 & 0b00111111;
+		let mut seed     = seed           & 0b00000011;
 
-impl FromStr for Block {
-	type Err = BlockFromStrError;
+		seed <<= 0x6;
+
+		let value = material | seed;
+		Self(value)
+	}
 
 	#[inline]
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		match s {
-			"air"       => Ok(Self::Air),
-			"basalt"    => Ok(Self::Basalt),
-			"bedrock"   => Ok(Self::Bedrock),
-			"clay"      => Ok(Self::Clay),
-			"dirt"      => Ok(Self::Dirt),
-			"granite"   => Ok(Self::Granite),
-			"grass"     => Ok(Self::Grass),
-			"gravel"    => Ok(Self::Gravel),
-			"limestone" => Ok(Self::Limestone),
-			"magma"     => Ok(Self::Magma),
-			"marble"    => Ok(Self::Marble),
-			"sand"      => Ok(Self::Sand),
-			"stone"     => Ok(Self::Stone),
-			"water"     => Ok(Self::Water),
+	pub const fn set_material(&mut self, material: Material) {
+		let material = material as u8 & 0b00111111;
 
-			_ => Err(BlockFromStrError { name: s.into() })
+		let mut value = self.0;
+
+		value &= 0b11000000;
+		value |= material;
+
+		self.0 = value;
+	}
+
+	#[inline]
+	#[must_use]
+	pub const fn material(self) -> Material {
+		let material = self.0 & 0b00111111;
+
+		// SAFETY: We have applied an appropriate mask.
+		// These bits also only come from a previously-ex-
+		// isting `Material` object.
+		unsafe { Material::new_unchecked(material) }
+	}
+
+	#[inline]
+	#[must_use]
+	pub const fn seed(self) -> u8 {
+		let mut seed = self.0 & 0b11000000;
+
+		seed >>= 0x6;
+
+		seed
+	}
+
+	#[inline]
+	#[must_use]
+	pub fn tags(self) -> BlockTags {
+		match self.material() {
+			Material::Air       => BlockTags::EMPTY | BlockTags::STATIC,
+			Material::Basalt    => BlockTags::STATIC,
+			Material::Bedrock   => BlockTags::GOD | BlockTags::STATIC,
+			Material::Clay      => BlockTags::NONE,
+			Material::Dirt      => BlockTags::NONE,
+			Material::Granite   => BlockTags::STATIC,
+			Material::Grass     => BlockTags::NONE,
+			Material::Gravel    => BlockTags::NONE,
+			Material::Limestone => BlockTags::STATIC,
+			Material::Magma     => BlockTags::HOT | BlockTags::LIQUID,
+			Material::Marble    => BlockTags::STATIC,
+			Material::Sand      => BlockTags::NONE,
+			Material::Stone     => BlockTags::STATIC,
+			Material::Water     => BlockTags::LIQUID,
+			Material::Ice       => BlockTags::COLD | BlockTags::STICKY,
+			Material::Wood      => BlockTags::STICKY,
+			Material::Glass     => BlockTags::STICKY,
+			Material::Fire      => BlockTags::HOT,
 		}
 	}
 }

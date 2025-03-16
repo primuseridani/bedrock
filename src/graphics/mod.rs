@@ -1,18 +1,17 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod graphics_context;
-mod rgba;
 mod vec2;
+mod rgba;
+mod rgba_from_str_error;
 mod vertex;
 
 pub use graphics_context::GraphicsContext;
+pub use rgba::Rgba;
+pub use rgba_from_str_error::RgbaFromStrError;
+pub use vec2::Vec2;
 
-use rgba::Rgba;
-use vec2::Vec2;
 use vertex::Vertex;
-
-pub const MIN_VIEW_SCALE: u32 = 0x010;
-pub const MAX_VIEW_SCALE: u32 = 0x400;
 
 const MAIN_SHADER: &str = concat!(
 	include_str!("prelude.wgsl"),

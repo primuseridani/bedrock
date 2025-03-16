@@ -1,11 +1,16 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::app::App;
-use crate::level::{Block, Level, MapSize};
+use crate::level::{Block, Material};
 use crate::log::log;
 
+use rand::random;
+
 impl App {
-	pub(super) fn regenerate_level(&mut self, level: &Level, size: MapSize) {
+	pub(super) fn regenerate_level(&mut self) {
+		let level = &self.config.level;
+		let size  = self.config.map_size;
+
 		log!(debug, "generating level using preset \"{}\"", level.name);
 
 		assert!(!level.chunks.is_empty());
@@ -57,17 +62,21 @@ impl App {
 
 			let terrain_height = (f64::from(size.height()) * chunk.terrain_height.clamp(0.0, 1.0)) as u32;
 
-			let cells = column
+			let blocks = column
 				.iter_mut()
 				.enumerate()
-				.map(|(y, cell)| (y as u32, cell));
+				.map(|(y, block)| (y as u32, block));
 
-			for (y, cell) in cells {
+			for (y, slot) in blocks {
+				let mut block = Block::new(Default::default(), random());
+
 				if y == 0x0 {
-					*cell = Block::Bedrock;
-				} else if y > terrain_height {
-					*cell = chunk.ground;
+					block.set_material(Material::Bedrock);
+				} else if y < terrain_height {
+					block.set_material(chunk.ground);
 				}
+
+				*slot = block;
 			}
 		}
 	}

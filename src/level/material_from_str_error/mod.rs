@@ -3,13 +3,13 @@
 use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct BlockFromStrError {
+pub struct MaterialFromStrError {
 	pub name: Box<str>,
 }
 
-impl std::error::Error for BlockFromStrError { }
+impl std::error::Error for MaterialFromStrError { }
 
-impl Display for BlockFromStrError {
+impl Display for MaterialFromStrError {
 	#[inline(always)]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "unknown block \"{}\"", self.name)

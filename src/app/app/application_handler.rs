@@ -1,6 +1,6 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::app::{App, Event};
+use crate::app::{App, UserEvent};
 use crate::graphics::GraphicsContext;
 use crate::log::log;
 
@@ -9,12 +9,15 @@ use winit::event::{StartCause, WindowEvent};
 use winit::event_loop::ActiveEventLoop;
 use winit::window::WindowId;
 
-impl ApplicationHandler<Event> for App {
+impl ApplicationHandler<UserEvent> for App {
 	fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-		if self.graphics_context.is_some() { return };
+		let _ = self.graphics_context.get_or_insert_with(|| {
+			let mut context = GraphicsContext::new(event_loop);
 
-		let graphics_context = GraphicsContext::new(event_loop);
-		self.graphics_context = Some(graphics_context);
+			context.draw_map(&self.map, self.view_pan, self.view_scale);
+
+			context
+		});
 	}
 
 	fn window_event(
@@ -34,19 +37,22 @@ impl ApplicationHandler<Event> for App {
 				self.handle_keyboard_input(event_loop, device_id, event, is_synthetic);
 			}
 
+			WindowEvent::ModifiersChanged(modifiers) => {
+				log!(note, "keyboard modifiers changed: `{modifiers:?}`");
+				self.keyboard_modifiers = modifiers;
+			}
+
 			WindowEvent::MouseWheel { device_id, delta, phase } => {
 				self.handle_mouse_wheel(event_loop, device_id, delta, phase);
 			}
 
 			WindowEvent::RedrawRequested => {
 				let graphics_context = self.graphics_context.as_mut().unwrap();
-
-				graphics_context.render(&self.map, self.view_scale);
+				graphics_context.render(self.config.level.background);
 			}
 
 			WindowEvent::Resized(size) => {
 				let graphics_context = self.graphics_context.as_mut().unwrap();
-
 				graphics_context.resize(size.width, size.height);
 			}
 
@@ -60,16 +66,22 @@ impl ApplicationHandler<Event> for App {
 		let StartCause::Poll = cause else { return };
 
 		let graphics_context = self.graphics_context.as_mut().unwrap();
-
 		graphics_context.request_redraw();
 	}
 
-	fn user_event(&mut self, event_loop: &ActiveEventLoop, event: Event) {
-		let Event::Terminate = event;
+	fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
+		match event {
+			UserEvent::Terminate => {
+				log!("got terminate");
 
-		log!("got terminate");
+				event_loop.exit();
+			}
 
-		event_loop.exit();
+			UserEvent::RedrawMap => {
+				let graphics_context = self.graphics_context.as_mut().unwrap();
+				graphics_context.draw_map(&self.map, self.view_pan, self.view_scale);
+			}
+		}
 	}
 
 	fn exiting(&mut self, _event_loop: &ActiveEventLoop) {

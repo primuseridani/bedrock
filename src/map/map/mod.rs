@@ -1,6 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::{Block, Columns, ColumnsMut, MapSize};
+use crate::level::Block;
+use crate::map::{Columns, ColumnsMut, MapSize};
 
 use std::hint::assert_unchecked;
 use std::mem::swap;

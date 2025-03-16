@@ -3,6 +3,21 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-3
+
+* Support view panning
+* Update zoom controls
+* Restructure code
+* Add block tags
+* Add more block materials
+* Fix map generator
+* Display map to window
+* Update level format
+* Embed random seed in blocks
+* Update default map dimensions
+* Update Valley level
+* Add Lake level
+
 ## 0.4.0-2
 
 * Support zooming with the (primary) mouse wheel

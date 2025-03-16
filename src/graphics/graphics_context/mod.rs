@@ -1,18 +1,17 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+mod draw_map;
 mod new;
 mod render;
 mod resize;
 
-use crate::graphics::{MAX_VIEW_SCALE, Rgba};
+use crate::graphics::Rgba;
 
 use std::pin::Pin;
 use winit::window::Window;
 
 #[derive(Debug)]
 pub struct GraphicsContext {
-	scale_factor: (f32, f32),
-
 	pipeline: wgpu::RenderPipeline,
 
 	index_count: u32,
@@ -33,11 +32,13 @@ pub struct GraphicsContext {
 }
 
 impl GraphicsContext {
-	const DEFAULT_SIZE: (u32, u32) = (0x0200, 0x0180);
+	const DEFAULT_SIZE: (u32, u32) = (0x280, 0x1E0);
+
+	const TEXTURE_WIDTH: u32 = 0x200;
 
 	const TEXTURE_EXTENT: wgpu::Extent3d = wgpu::Extent3d {
-		width:                 MAX_VIEW_SCALE,
-		height:                MAX_VIEW_SCALE,
+		width:                 Self::TEXTURE_WIDTH,
+		height:                Self::TEXTURE_WIDTH,
 		depth_or_array_layers: 0x1,
 	};
 

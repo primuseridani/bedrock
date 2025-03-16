@@ -1,6 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::{Block, Map};
+use crate::level::Block;
+use crate::map::Map;
 
 use std::iter::FusedIterator;
 use std::marker::PhantomData;

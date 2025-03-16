@@ -1,6 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::{Block, Chunk, Level};
+use crate::graphics::Rgba;
+use crate::level::{Chunk, Level, Material};
 
 impl Level {
 	pub fn load_builtin(name: &str) -> Option<Self> {
@@ -10,11 +11,13 @@ impl Level {
 				creatour:    "Achernar".into(),
 				description: "A flat field.".into(),
 
+				background: Rgba::from_u32(0x9DD8FEFF),
+
 				chunks: vec![
 					Chunk {
 						terrain_height: 1.0 / 3.0,
 
-						ground: Block::Dirt,
+						ground: Material::Dirt,
 					},
 				],
 			}),
@@ -24,17 +27,19 @@ impl Level {
 				creatour:    "Achernar".into(),
 				description: "A simple mountain.".into(),
 
+				background: Rgba::from_u32(0xD0D0D0FF),
+
 				chunks: vec![
 					Chunk {
 						terrain_height: 1.0 / 3.0,
 
-						ground: Block::Stone,
+						ground: Material::Stone,
 					},
 
 					Chunk {
 						terrain_height: 0.5,
 
-						ground: Block::Stone,
+						ground: Material::Stone,
 					},
 				],
 			}),
@@ -44,23 +49,53 @@ impl Level {
 				creatour:    "Achernar".into(),
 				description: "A simple valley.".into(),
 
+				background: Rgba::from_u32(0x017DA9FF),
+
 				chunks: vec![
 					Chunk {
 						terrain_height: 0.5,
 
-						ground: Block::Stone,
+						ground: Material::Stone,
+					},
+
+					Chunk {
+						terrain_height: 0.25,
+
+						ground: Material::Dirt,
+					},
+
+					Chunk {
+						terrain_height: 0.5,
+
+						ground: Material::Stone,
+					},
+				],
+			}),
+
+			"lake" => Some(Self {
+				name:        "Lake".into(),
+				creatour:    "Achernar".into(),
+				description: "A nice lake.".into(),
+
+				background: Rgba::from_u32(0xD84F01FF),
+
+				chunks: vec![
+					Chunk {
+						terrain_height: 0.25,
+
+						ground: Material::Dirt,
 					},
 
 					Chunk {
 						terrain_height: 0.125,
 
-						ground: Block::Dirt,
+						ground: Material::Water,
 					},
 
 					Chunk {
-						terrain_height: 0.5,
+						terrain_height: 0.25,
 
-						ground: Block::Stone,
+						ground: Material::Dirt,
 					},
 				],
 			}),

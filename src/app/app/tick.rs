@@ -3,7 +3,7 @@
 use rand::random;
 
 use crate::app::App;
-use crate::level::Block;
+use crate::level::Material;
 
 use std::mem::swap;
 
@@ -12,27 +12,27 @@ impl App {
 		let seed = random::<u32>();
 
 		for column in self.map.columns_mut() {
-			for cells in column.chunks_exact_mut(0x2) {
-				let [cell, next_cell] = cells else { unreachable!() };
+			for blocks in column.chunks_exact_mut(0x2) {
+				let [block, next_cell] = blocks else { unreachable!() };
 
-				match (*cell, *next_cell) {
-					(Block::Air, other)
-					if other != Block::Air
+				match (block.material(), next_cell.material()) {
+					(Material::Air, other)
+					if other != Material::Air
 					=> {
-						swap(cell, next_cell);
+						swap(block, next_cell);
 					}
 
-					(Block::Grass, other)
-					if other != Block::Air
+					(Material::Grass, other)
+					if other != Material::Air
 					&& seed >= 0x3FFFFFFF
 					=> {
-						*cell = Block::Dirt;
+						block.set_material(Material::Dirt);
 					}
 
-					(Block::Magma, Block::Air)
+					(Material::Magma, Material::Air)
 					if seed >= 0x3FFFFFFF
 					=> {
-						*cell = Block::Basalt;
+						block.set_material(Material::Basalt);
 					}
 
 					_ => { }

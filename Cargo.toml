@@ -1,6 +1,6 @@
 [package]
 name       = "bedrock"
-version    = "0.4.0-2"
+version    = "0.4.0-3"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "ssh://git@ssh.mandelbrot.dk:bedrock"
@@ -14,7 +14,7 @@ wgpu     = "24.0"
 winit    = "0.30"
 
 serde    = { version = "1.0", features = ["derive"] }
-zerocopy = { version = "0.8", features = ["derive", "simd"] }
+zerocopy = { version = "0.8", features = ["derive"] }
 
 [workspace.lints.clippy]
 arc_with_non_send_sync             = "forbid"

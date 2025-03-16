@@ -20,6 +20,8 @@ struct LevelLevelHelper {
 	pub name:        String,
 	pub creatour:    String,
 	pub description: String,
+
+	pub background: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -78,10 +80,18 @@ impl App {
 				})
 				.collect::<Result<_>>()?;
 
+			let background = helper
+				.level
+				.background
+				.parse()
+				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
+
 			Level {
 				name:        helper.level.name,
 				creatour:    helper.level.creatour,
 				description: helper.level.description,
+
+				background,
 
 				chunks,
 			}

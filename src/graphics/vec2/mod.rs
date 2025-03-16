@@ -1,16 +1,11 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use std::cmp::Ordering;
-use std::fmt::{self, Debug, Display, Formatter};
+use std::fmt::{self, Debug, Formatter};
 use zerocopy::{FromZeros, Immutable, IntoBytes, KnownLayout};
 
-type Buffer = [f32; 0x2];
-
-const _: () = assert!(size_of::<Buffer>() == size_of::<f32>() * 0x2);
-
 #[repr(align(0x8), C)]
-#[derive(Clone, Copy, Default, FromZeros, Immutable, IntoBytes, KnownLayout)]
-pub(super) struct Vec2(Buffer);
+#[derive(Clone, Copy, Default, FromZeros, Immutable, IntoBytes, KnownLayout, PartialEq, PartialOrd)]
+pub struct Vec2([f32; 0x2]);
 
 impl Vec2 {
 	#[inline(always)]
@@ -35,23 +30,9 @@ impl Debug for Vec2 {
 	}
 }
 
-impl Display for Vec2 {
+impl From<(f32, f32)> for Vec2 {
 	#[inline(always)]
-	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-		Debug::fmt(&self.get(), f)
-	}
-}
-
-impl PartialEq for Vec2 {
-	#[inline(always)]
-	fn eq(&self, other: &Self) -> bool {
-		self.get() == other.get()
-	}
-}
-
-impl PartialOrd for Vec2 {
-	#[inline(always)]
-	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-		self.get().partial_cmp(&other.get())
+	fn from((x, y): (f32, f32)) -> Self {
+		Self::new(x, y)
 	}
 }

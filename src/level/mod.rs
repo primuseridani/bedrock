@@ -1,19 +1,15 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod block;
-mod block_from_str_error;
+mod block_tags;
 mod chunk;
-mod columns;
-mod columns_mut;
 mod level;
-mod map;
-mod map_size;
+mod material;
+mod material_from_str_error;
 
 pub use block::Block;
-pub use block_from_str_error::BlockFromStrError;
+pub use block_tags::BlockTags;
 pub use chunk::Chunk;
-pub use columns::Columns;
-pub use columns_mut::ColumnsMut;
 pub use level::Level;
-pub use map::Map;
-pub use map_size::MapSize;
+pub use material::Material;
+pub use material_from_str_error::MaterialFromStrError;

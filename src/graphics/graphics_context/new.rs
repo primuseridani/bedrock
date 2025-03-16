@@ -1,12 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{
-	GraphicsContext,
-	Vec2,
-	Vertex,
-	MAIN_SHADER,
-	MAX_VIEW_SCALE,
-};
+use crate::graphics::{GraphicsContext, Vertex, MAIN_SHADER};
+
 use crate::log::log;
 use crate::version::Version;
 
@@ -17,7 +12,7 @@ use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::dpi::PhysicalSize;
 use winit::event_loop::ActiveEventLoop;
 use winit::window::WindowAttributes;
-use zerocopy::{FromZeros, IntoBytes};
+use zerocopy::IntoBytes;
 
 impl GraphicsContext {
 	#[must_use]
@@ -217,12 +212,12 @@ impl GraphicsContext {
 			device.create_bind_group(&descriptor)
 		};
 
-		let texture_buf = vec![Default::default(); MAX_VIEW_SCALE as usize * MAX_VIEW_SCALE as usize].into();
+		let texture_buf = vec![Default::default(); Self::TEXTURE_WIDTH as usize * Self::TEXTURE_WIDTH as usize].into();
 
 		log!(debug, "creating vertex buffer");
 
 		let vertex_buf = {
-			let vertices = [Vertex::new_zeroed(); 0x8];
+			let vertices = [Vertex::default(); 0x8];
 
 			let descriptor = BufferInitDescriptor {
 				label:    Some("main"),
@@ -312,8 +307,6 @@ impl GraphicsContext {
 		};
 
 		let mut this = Self {
-			scale_factor: (1.0, 1.0),
-
 			pipeline,
 
 			index_count,

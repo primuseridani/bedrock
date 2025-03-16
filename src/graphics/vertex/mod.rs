@@ -10,8 +10,6 @@ use zerocopy::{FromZeros, Immutable, IntoBytes, KnownLayout};
 pub(super) struct Vertex {
 	pub clip:    Vec2,
 	pub texture: Vec2,
-
-	pub _pad00: [u8; 0x8],
 }
 
 impl Vertex {

@@ -1,8 +1,8 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod app;
-mod event;
+mod user_event;
 
-use event::Event;
+use user_event::UserEvent;
 
 pub use app::App;
