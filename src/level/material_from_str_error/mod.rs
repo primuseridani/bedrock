@@ -10,7 +10,7 @@ pub struct MaterialFromStrError {
 impl std::error::Error for MaterialFromStrError { }
 
 impl Display for MaterialFromStrError {
-	#[inline(always)]
+	#[inline]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "unknown block \"{}\"", self.name)
 	}

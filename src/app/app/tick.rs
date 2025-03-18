@@ -84,6 +84,14 @@ impl App {
 					}
 
 					Event {
+						lhs:    block.material() == Material::Dirt,
+						rhs:    next_block.material() == Material::Grass,
+						chance: 0x1 / 0x80,
+					} => {
+						block.set_material(Material::Grass);
+					}
+
+					Event {
 						lhs:    block.material() == Material::Grass,
 						rhs:    !next_block.is_emtpy(),
 						chance: 0x1 / 0x80,

@@ -77,7 +77,7 @@ impl Rgba {
 }
 
 impl Debug for Rgba {
-	#[inline(always)]
+	#[inline]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		Display::fmt(self, f)
 	}

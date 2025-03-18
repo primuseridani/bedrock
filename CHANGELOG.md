@@ -3,6 +3,15 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-5
+
+* Update block colours
+* Update background colour for *Lake* and *Lava Lake*
+* Support setting level from cli
+* Add controls overview
+* Fix test level not specifying background
+* Revert default level back to *Lake*
+
 ## 0.4.0-4
 
 * Enable ticking

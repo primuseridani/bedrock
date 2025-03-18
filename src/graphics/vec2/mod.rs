@@ -24,7 +24,7 @@ impl Vec2 {
 }
 
 impl Debug for Vec2 {
-	#[inline(always)]
+	#[inline]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		Debug::fmt(&self.get(), f)
 	}

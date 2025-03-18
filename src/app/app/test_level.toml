@@ -3,6 +3,8 @@ name        = "test"
 creatour    = "Achernar"
 description = "A test level."
 
+background = "#1F1F1F"
+
 [[chunk]]
 terrain_height = 0.0625
 

@@ -14,6 +14,8 @@ pub enum Error {
 
 	MissingDataDir,
 
+	UnknownCliArg(Box<str>),
+
 	UnknownLevel {
 		path:   Box<Path>,
 		source: Box<dyn std::error::Error>,
@@ -36,6 +38,9 @@ impl Display for Error {
 
 			Self::MissingDataDir
 			=> write!(f, "could not find data directory"),
+
+			Self::UnknownCliArg(ref arg)
+			=> write!(f, "unknown command line interface \"{arg}\""),
 
 			Self::UnknownLevel { ref path, ref source }
 			=> write!(f, "unable to load level at \"{}\": {source}", path.display()),
@@ -64,6 +69,7 @@ impl From<Error> for i32 {
 		match value {
 			| Error::InvalidLevel { .. }
 			| Error::MissingDataDir
+			| Error::UnknownCliArg(_)
 			| Error::UnknownLevel { .. }
 			=> 0x2,
 		}

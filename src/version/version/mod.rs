@@ -15,12 +15,12 @@ impl Version {
 		major: 0x0,
 		minor: 0x4,
 		patch: 0x0,
-		pre:   Some(0x4),
+		pre:   Some(0x5),
 	};
 }
 
 impl Display for Version {
-	#[inline(always)]
+	#[inline]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		write!(f, "{}.{}.{}", self.major, self.minor, self.patch)?;
 

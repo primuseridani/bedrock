@@ -87,9 +87,9 @@ impl App {
 				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
 
 			Level {
-				name:        helper.level.name,
-				creatour:    helper.level.creatour,
-				description: helper.level.description,
+				name:        helper.level.name.into(),
+				creatour:    helper.level.creatour.into(),
+				description: helper.level.description.into(),
 
 				background,
 

@@ -5,12 +5,11 @@ use crate::error::{Error, Result};
 use crate::log::log;
 use crate::version::Version;
 
+use std::env::{args, home_dir};
 use std::fs::{create_dir_all, write};
 use std::path::PathBuf;
 use std::time::Instant;
 use winit::event_loop::{ControlFlow, EventLoop};
-
-use std::env::home_dir;
 
 impl App {
 	pub fn run() -> Result<()> {
@@ -19,6 +18,19 @@ impl App {
 		eprintln!("\u{001B}[002mbedrock-{}\u{001B}[022m", Version::CURRENT);
 		eprintln!();
 		eprintln!("\u{001B}[002mCopyright \u{00A9} 2025 Gabriel Bj\u{00F8}rnager Jensen.\u{001B}[022m");
+		eprintln!();
+		eprintln!("Controls (en-gb):");
+		eprintln!("  esc                : quit game");
+		eprintln!();
+		eprintln!("  ctrl + mwheelup    : zoom in");
+		eprintln!("  ctrl + mwheeldown  : zoom out");
+		eprintln!("  lalt + mwheelup    : pan right");
+		eprintln!("  lalt + mwheeldown  : pan left");
+		eprintln!("  shift + mwheelup   : pan up");
+		eprintln!("  shift + mwheeldown : pan down");
+		eprintln!();
+		eprintln!("  plus               : increas tps");
+		eprintln!("  hyphen             : decrease tps");
 		eprintln!();
 
 		log!(debug, "creating event loop");
@@ -120,6 +132,11 @@ impl App {
 
 	fn init(&mut self) -> Result<()> {
 		self.set_terminate_handler()?;
+
+		if let Some(level) = args().nth(0x1) {
+			let level = self.load_level(&level)?;
+			self.level = level;
+		}
 
 		self.regenerate_level();
 

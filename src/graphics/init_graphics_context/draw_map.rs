@@ -130,10 +130,10 @@ const fn block_colour(block: Block) -> Rgba {
 		],
 
 		Material::Magma => [
-			Rgba::from_u32(0xFF0000FF),
 			Rgba::from_u32(0xFF4800FF),
-			Rgba::from_u32(0xFF9300FF),
-			Rgba::from_u32(0xFFB400FF),
+			Rgba::from_u32(0xFF8200FF),
+			Rgba::from_u32(0xFFA000FF),
+			Rgba::from_u32(0xFEB300FF),
 		],
 
 		Material::Marble => [
@@ -144,10 +144,10 @@ const fn block_colour(block: Block) -> Rgba {
 		],
 
 		Material::Sand => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			Rgba::from_u32(0xF5D88FFF),
+			Rgba::from_u32(0xF8E5B4FF),
+			Rgba::from_u32(0xFCEDC5FF),
+			Rgba::from_u32(0xF7D479FF),
 		],
 
 		Material::Stone => [
