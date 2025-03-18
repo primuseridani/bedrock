@@ -14,10 +14,13 @@ use std::str::FromStr;
 use zerocopy::{FromZeros, Immutable, IntoBytes};
 
 #[repr(transparent)]
-#[derive(Clone, Copy, Default, Eq, FromZeros, Immutable, IntoBytes, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Eq, FromZeros, Immutable, IntoBytes, Ord, PartialEq, PartialOrd)]
 pub struct Rgba([u8; 0x4]);
 
 impl Rgba {
+	pub const TRANSPARENT: Self = Self::from_u32(0x00000000);
+	pub const DEFAULT:     Self = Self::from_u32(0xFF00FFFF);
+
 	#[inline(always)]
 	#[must_use]
 	pub const fn new(r: u8, g: u8, b: u8, a: u8) -> Self {
@@ -74,9 +77,16 @@ impl Rgba {
 }
 
 impl Debug for Rgba {
-	#[inline]
+	#[inline(always)]
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		Display::fmt(self, f)
+	}
+}
+
+impl Default for Rgba {
+	#[inline(always)]
+	fn default() -> Self {
+		Self::DEFAULT
 	}
 }
 

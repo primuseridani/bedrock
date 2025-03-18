@@ -100,6 +100,34 @@ impl Level {
 				],
 			}),
 
+			"lava_lake" => Some(Self {
+				name:        "Lava Lake".into(),
+				creatour:    "Achernar".into(),
+				description: "A not-so-nice lake.".into(),
+
+				background: Rgba::from_u32(0xFF0000FF),
+
+				chunks: vec![
+					Chunk {
+						terrain_height: 0.25,
+
+						ground: Material::Dirt,
+					},
+
+					Chunk {
+						terrain_height: 0.125,
+
+						ground: Material::Magma,
+					},
+
+					Chunk {
+						terrain_height: 0.25,
+
+						ground: Material::Dirt,
+					},
+				],
+			}),
+
 			_ => None,
 		}
 	}

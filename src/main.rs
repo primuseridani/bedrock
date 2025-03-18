@@ -1,20 +1,23 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+#![feature(cold_path)]
+#![feature(default_field_values)]
 #![feature(generic_arg_infer)]
-#![feature(thread_sleep_until)]
 
 // Why is this needed?
-#![allow(clippy::module_inception)]
+#![expect(clippy::module_inception)]
+
+extern crate self as bedrock;
 
 const _: () = assert!(usize::BITS >= u32::BITS);
 
 mod app;
+mod config;
 mod error;
 mod graphics;
 mod level;
 mod map;
 mod log;
-mod preset;
 mod version;
 
 fn main() -> ! {

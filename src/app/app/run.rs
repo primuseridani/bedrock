@@ -7,9 +7,9 @@ use crate::version::Version;
 
 use std::fs::{create_dir_all, write};
 use std::path::PathBuf;
+use std::time::Instant;
 use winit::event_loop::{ControlFlow, EventLoop};
 
-#[allow(deprecated)]
 use std::env::home_dir;
 
 impl App {
@@ -34,20 +34,24 @@ impl App {
 		let event_loop_proxy = event_loop.create_proxy();
 
 		let mut this = Self {
-			data_dir: Self::get_data_dir()?,
-
-			config: Default::default(),
-
-			map: Default::default(),
-
 			event_loop_proxy,
 
 			graphics_context: Default::default(),
 
 			keyboard_modifiers: Default::default(),
 
+			data_dir: Self::get_data_dir()?,
+			config:   Default::default(),
+			level:    Default::default(),
+
+			map: Default::default(),
+
+			raw_view_scale: Default::default(),
+
 			view_pan:   Default::default(),
 			view_scale: Self::MIN_VIEW_SCALE,
+
+			next_tick: Instant::now(),
 		};
 
 		this.init()?;
@@ -57,7 +61,6 @@ impl App {
 		Ok(())
 	}
 
-	#[allow(deprecated)]
 	fn get_data_dir() -> Result<PathBuf> {
 		let mut data_dir = home_dir().ok_or(Error::MissingDataDir)?;
 

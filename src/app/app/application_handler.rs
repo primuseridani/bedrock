@@ -1,9 +1,10 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::app::{App, UserEvent};
-use crate::graphics::GraphicsContext;
 use crate::log::log;
 
+use std::hint::cold_path;
+use std::time::{Duration, Instant};
 use winit::application::ApplicationHandler;
 use winit::event::{StartCause, WindowEvent};
 use winit::event_loop::ActiveEventLoop;
@@ -11,12 +12,8 @@ use winit::window::WindowId;
 
 impl ApplicationHandler<UserEvent> for App {
 	fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-		let _ = self.graphics_context.get_or_insert_with(|| {
-			let mut context = GraphicsContext::new(event_loop);
-
+		self.graphics_context.init_with(event_loop, |context| {
 			context.draw_map(&self.map, self.view_pan, self.view_scale);
-
-			context
 		});
 	}
 
@@ -24,7 +21,7 @@ impl ApplicationHandler<UserEvent> for App {
 		&mut self,
 		event_loop: &ActiveEventLoop,
 		_window_id: WindowId,
-		event: WindowEvent,
+		event:      WindowEvent,
 	) {
 		match event {
 			WindowEvent::CloseRequested => {
@@ -47,13 +44,13 @@ impl ApplicationHandler<UserEvent> for App {
 			}
 
 			WindowEvent::RedrawRequested => {
-				let graphics_context = self.graphics_context.as_mut().unwrap();
-				graphics_context.render(self.config.level.background);
+				let graphics_context = self.graphics_context.unwrap();
+				graphics_context.render_frame(self.level.background);
 			}
 
 			WindowEvent::Resized(size) => {
-				let graphics_context = self.graphics_context.as_mut().unwrap();
-				graphics_context.resize(size.width, size.height);
+				let graphics_context = self.graphics_context.unwrap();
+				graphics_context.resize((size.width, size.height));
 			}
 
 			// Ignore by default.
@@ -65,8 +62,19 @@ impl ApplicationHandler<UserEvent> for App {
 	fn new_events(&mut self, _event_loop: &ActiveEventLoop, cause: StartCause) {
 		let StartCause::Poll = cause else { return };
 
-		let graphics_context = self.graphics_context.as_mut().unwrap();
-		graphics_context.request_redraw();
+		if Instant::now() >= self.next_tick {
+			cold_path();
+
+			self.next_tick = Instant::now() + Duration::from_nanos(1_000_000_000 / self.config.tps as u64);
+
+			self.tick();
+
+			let graphics_context = self.graphics_context.unwrap();
+			graphics_context.draw_map(&self.map, self.view_pan, self.view_scale);
+		}
+
+		let graphics_context = self.graphics_context.unwrap();
+		graphics_context.redraw_window();
 	}
 
 	fn user_event(&mut self, event_loop: &ActiveEventLoop, event: UserEvent) {
@@ -78,7 +86,7 @@ impl ApplicationHandler<UserEvent> for App {
 			}
 
 			UserEvent::RedrawMap => {
-				let graphics_context = self.graphics_context.as_mut().unwrap();
+				let graphics_context = self.graphics_context.unwrap();
 				graphics_context.draw_map(&self.map, self.view_pan, self.view_scale);
 			}
 		}

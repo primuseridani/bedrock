@@ -3,6 +3,19 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-4
+
+* Enable ticking
+* Update block colours
+* Add *Volatile* block tag
+* Fix block tag testing
+* Add *Lava Lake* level
+* Fix viewport fragmentation
+* Update zoom behaviour
+* Update log formatting
+* Rename *God* block tag to *Divine*
+* Support adjusting tps
+
 ## 0.4.0-3
 
 * Support view panning

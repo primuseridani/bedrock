@@ -8,18 +8,18 @@ use rand::random;
 
 impl App {
 	pub(super) fn regenerate_level(&mut self) {
-		let level = &self.config.level;
-		let size  = self.config.map_size;
+		log!(debug, "generating level \"{}\"", self.level.name);
 
-		log!(debug, "generating level using preset \"{}\"", level.name);
+		log!(note, "config is: {:?}", self.config);
+		log!(note, "level is: {:?}", self.level);
 
-		assert!(!level.chunks.is_empty());
+		assert!(!self.level.chunks.is_empty());
 
-		assert!(level.chunks.len() <= u8::MAX as usize);
+		assert!(self.level.chunks.len() <= u8::MAX as usize);
 
-		self.map.resize(size);
+		self.map.resize(self.config.map_size);
 
-		let mut chunks = level.chunks.iter();
+		let mut chunks = self.level.chunks.iter();
 
 		let chunk_count = chunks.len() as u8;
 
@@ -53,14 +53,14 @@ impl App {
 				//   000000FEFFFFFE02 u64
 				// /               FF u8
 				// =         FFFFFFFE u32
-				chunk_stop = (size.width() as u64 * chunk_index as u64 / chunk_count as u64) as u32;
+				chunk_stop = (self.config.map_size.width() as u64 * chunk_index as u64 / chunk_count as u64) as u32;
 
 				chunk = chunks.next();
 			}
 
 			let chunk = chunk.unwrap();
 
-			let terrain_height = (f64::from(size.height()) * chunk.terrain_height.clamp(0.0, 1.0)) as u32;
+			let terrain_height = (f64::from(self.config.map_size.height()) * chunk.terrain_height.clamp(0.0, 1.0)) as u32;
 
 			let blocks = column
 				.iter_mut()
@@ -72,6 +72,8 @@ impl App {
 
 				if y == 0x0 {
 					block.set_material(Material::Bedrock);
+				} else if y == 0x80 {
+					block.set_material(Material::Dirt);
 				} else if y < terrain_height {
 					block.set_material(chunk.ground);
 				}

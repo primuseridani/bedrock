@@ -3,6 +3,6 @@
 mod app;
 mod user_event;
 
-use user_event::UserEvent;
-
 pub use app::App;
+
+use user_event::UserEvent;

@@ -1,5 +1,5 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-mod preset;
+mod config;
 
-pub use preset::Preset;
+pub use config::Config;

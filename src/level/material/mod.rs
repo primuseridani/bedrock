@@ -28,19 +28,9 @@ pub enum Material {
 	Wood,
 	Glass,
 	Fire,
-
-	// SAFETY: Remember to update `Self::new`.
 }
 
 impl Material {
-	pub const fn new(value: u8) -> Option<Self> {
-		if value > Self::Fire as u8 { return None };
-
-		// SAFETY: We have tested bounds.
-		let this = unsafe { Self::new_unchecked(value) };
-		Some(this)
-	}
-
 	pub const unsafe fn new_unchecked(value: u8) -> Self {
 		// SAFETY: Caller guarantees bounds.
 		unsafe { transmute::<u8, Self>(value) }

@@ -1,12 +1,12 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{GraphicsContext, Rgba};
+use crate::graphics::{InitGraphicsContext, Rgba};
 
 use std::iter;
 use zerocopy::IntoBytes;
 
-impl GraphicsContext {
-	pub fn render(&mut self, background: Rgba) {
+impl InitGraphicsContext {
+	pub fn render_frame(&mut self, background: Rgba) {
 		let output = match self.surface.get_current_texture() {
 			Ok(output) => output,
 
@@ -70,11 +70,10 @@ impl GraphicsContext {
 			let mut pass = encoder.begin_render_pass(&descriptor);
 
 			pass.set_bind_group(0x0, &self.texture_bind_group, Default::default());
-			pass.set_index_buffer(self.index_buf.slice(..), wgpu::IndexFormat::Uint16);
 			pass.set_vertex_buffer(0x0, self.vertex_buf.slice(..));
 			pass.set_pipeline(&self.pipeline);
 
-			pass.draw_indexed(0x0..self.index_count, 0x0, 0x0..0x1);
+			pass.draw(0x0..self.vertex_count, 0x0..0x1);
 		}
 
 		self.queue.submit(iter::once(encoder.finish()));

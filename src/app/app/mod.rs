@@ -8,30 +8,36 @@ mod run;
 mod tick;
 
 use crate::app::UserEvent;
+use crate::config::Config;
 use crate::graphics::GraphicsContext;
+use crate::level::Level;
 use crate::map::Map;
-use crate::preset::Preset;
 
 use std::path::PathBuf;
+use std::time::Instant;
 use winit::event::Modifiers;
 use winit::event_loop::EventLoopProxy;
 
 #[derive(Debug)]
 pub struct App {
-	data_dir: PathBuf,
-
-	config: Preset,
-
-	map: Map,
-
 	event_loop_proxy: EventLoopProxy<UserEvent>,
 
-	graphics_context: Option<GraphicsContext>,
+	graphics_context: GraphicsContext,
 
 	keyboard_modifiers: Modifiers,
 
+	data_dir: PathBuf,
+	config:   Config,
+	level:    Level,
+
+	map: Map,
+
+	raw_view_scale: f64,
+
 	view_pan:   (u32, u32),
 	view_scale: u32,
+
+	next_tick: Instant,
 }
 
 impl App {
@@ -40,7 +46,7 @@ impl App {
 
 	#[inline]
 	#[track_caller]
-	fn create_event(&self, event: UserEvent) {
+	fn create_user_event(&self, event: UserEvent) {
 		if let Err(e) = self.event_loop_proxy.send_event(event) {
 			panic!("unable to create event: {e}");
 		}

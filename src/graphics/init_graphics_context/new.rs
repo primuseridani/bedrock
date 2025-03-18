@@ -1,6 +1,6 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{GraphicsContext, Vertex, MAIN_SHADER};
+use crate::graphics::{InitGraphicsContext, Vertex, MAIN_SHADER};
 
 use crate::log::log;
 use crate::version::Version;
@@ -14,7 +14,7 @@ use winit::event_loop::ActiveEventLoop;
 use winit::window::WindowAttributes;
 use zerocopy::IntoBytes;
 
-impl GraphicsContext {
+impl InitGraphicsContext {
 	#[must_use]
 	pub fn new(event_loop: &ActiveEventLoop) -> Self {
 		log!(debug, "creating graphics context");
@@ -216,8 +216,8 @@ impl GraphicsContext {
 
 		log!(debug, "creating vertex buffer");
 
-		let vertex_buf = {
-			let vertices = [Vertex::default(); 0x8];
+		let (vertex_count, vertex_buf) = {
+			let vertices = [Vertex::default(); 0x3];
 
 			let descriptor = BufferInitDescriptor {
 				label:    Some("main"),
@@ -225,24 +225,7 @@ impl GraphicsContext {
 				usage:    wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::VERTEX,
 			};
 
-			device.create_buffer_init(&descriptor)
-		};
-
-		log!(debug, "creating index buffer");
-
-		let (index_count, index_buf) = {
-			let indices: [u16; _] = [
-				0x0, 0x1, 0x2,
-				0x3, 0x0, 0x2,
-			];
-
-			let descriptor = BufferInitDescriptor {
-				label:    Some("main"),
-				contents: indices.as_bytes(),
-				usage:    wgpu::BufferUsages::INDEX,
-			};
-
-			let count = indices.len() as u32;
+			let count = vertices.len() as u32;
 			let buf   = device.create_buffer_init(&descriptor);
 
 			(count, buf)
@@ -309,8 +292,7 @@ impl GraphicsContext {
 		let mut this = Self {
 			pipeline,
 
-			index_count,
-			index_buf,
+			vertex_count,
 			vertex_buf,
 
 			texture_buf,
@@ -326,7 +308,7 @@ impl GraphicsContext {
 			window,
 		};
 
-		this.resize(size.width, size.height);
+		this.resize((size.width, size.height));
 
 		this
 	}

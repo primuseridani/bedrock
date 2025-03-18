@@ -1,7 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::level::Block;
-use crate::map::Map;
+use crate::map::{ColumnWindowsMut, Map};
 
 use std::iter::FusedIterator;
 use std::marker::PhantomData;
@@ -35,6 +35,11 @@ impl<'a> ColumnsMut<'a> {
 			_map: PhantomData,
 		}
 	}
+
+	#[inline(always)]
+	pub fn next_as_windows_mut(&mut self) -> Option<ColumnWindowsMut> {
+		ColumnWindowsMut::new(self)
+	}
 }
 
 impl ExactSizeIterator for ColumnsMut<'_> { }
@@ -53,7 +58,7 @@ impl<'a> Iterator for ColumnsMut<'a> {
 		// SAFETY: We guarantee that the lengths of map
 		// buffers are always a multiple of the map's
 		// height. We have also in this case tested that
-		// there are remaining columnsMut. We are also
+		// there are remaining columns. We are also
 		// guaranteed to exclusively access the buffer
 		// thanks to `self._map`.
 		let data = unsafe { slice::from_raw_parts_mut(self.ptr, height) };

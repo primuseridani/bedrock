@@ -19,6 +19,6 @@ pub struct Level {
 impl Default for Level {
 	#[inline(always)]
 	fn default() -> Self {
-		Self::load_builtin("lake").unwrap()
+		Self::load_builtin("lava_lake").unwrap()
 	}
 }

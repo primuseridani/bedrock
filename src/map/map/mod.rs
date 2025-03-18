@@ -1,13 +1,11 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::level::Block;
-use crate::map::{Columns, ColumnsMut, MapSize};
+use crate::map::{ColumnsMut, MapSize};
 
 use std::hint::assert_unchecked;
 use std::mem::swap;
 use std::num::NonZero;
-use std::ops::{Index, IndexMut};
-use std::slice;
 
 #[derive(Clone, Debug)]
 pub struct Map {
@@ -45,41 +43,24 @@ impl Map {
 		swap(&mut data, &mut self.data);
 	}
 
-	#[allow(unused)]
 	#[inline(always)]
 	#[must_use]
-	pub fn get(&self, x: u32, y: u32) -> Option<&Block> {
+	pub fn sample(&self, x: f64, y: f64) -> Option<Block> {
+		if x <= 0.0 || x >= f64::from(self.width()) {
+			return None;
+		}
+
+		if y <= 0.0 || y >= f64::from(self.height()) {
+			return None;
+		}
+
+		let x = x as u32;
+		let y = y as u32;
+
 		let index = x as usize * self.height as usize + y as usize;
-		self.data.get(index)
+		self.data.get(index).copied()
 	}
 
-	#[allow(unused)]
-	#[inline(always)]
-	#[must_use]
-	pub fn get_mut(&mut self, x: u32, y: u32) -> Option<&mut Block> {
-		let index = x as usize * self.height as usize + y as usize;
-		self.data.get_mut(index)
-	}
-
-	#[allow(unused)]
-	#[inline(always)]
-	pub fn iter(&self) -> slice::Iter<Block> {
-		self.data.iter()
-	}
-
-	#[allow(unused)]
-	#[inline(always)]
-	pub fn iter_mut(&mut self) -> slice::IterMut<Block> {
-		self.data.iter_mut()
-	}
-
-	#[allow(unused)]
-	#[inline(always)]
-	pub fn columns(&self) -> Columns {
-		Columns::new(self)
-	}
-
-	#[allow(unused)]
 	#[inline(always)]
 	pub fn columns_mut(&mut self) -> ColumnsMut {
 		ColumnsMut::new(self)
@@ -99,8 +80,8 @@ impl Map {
 	#[inline(always)]
 	#[must_use]
 	pub fn width(&self) -> u32 {
-		// SAFETY: This is guaranteed for compatibility
-		// with `MapSize`.
+		// SAFETY: This is already guaranteed for compati-
+		// bility with `MapSize`.
 		let height = unsafe { NonZero::new_unchecked(self.height() as usize) };
 
 		// NOTE: We always guarantee that the buffer's
@@ -121,6 +102,7 @@ impl Map {
 		unsafe { MapSize::new_unchecked(width, height) }
 	}
 
+	#[expect(unused)]
 	#[inline(always)]
 	#[must_use]
 	pub fn as_ptr(&self) -> *const Block {
@@ -138,45 +120,5 @@ impl Default for Map {
 	#[inline(always)]
 	fn default() -> Self {
 		Self::new(Default::default())
-	}
-}
-
-impl Index<(u32, u32)> for Map {
-	type Output = Block;
-
-	#[inline(always)]
-	#[track_caller]
-	fn index(&self, index: (u32, u32)) -> &Self::Output {
-		self.get(index.0, index.1).unwrap()
-	}
-}
-
-impl IndexMut<(u32, u32)> for Map {
-	#[inline(always)]
-	#[track_caller]
-	fn index_mut(&mut self, index: (u32, u32)) -> &mut Self::Output {
-		self.get_mut(index.0, index.1).unwrap()
-	}
-}
-
-impl<'a> IntoIterator for &'a Map {
-	type Item = &'a Block;
-
-	type IntoIter = slice::Iter<'a, Block>;
-
-	#[inline(always)]
-	fn into_iter(self) -> Self::IntoIter {
-		self.iter()
-	}
-}
-
-impl<'a> IntoIterator for &'a mut Map {
-	type Item = &'a mut Block;
-
-	type IntoIter = slice::IterMut<'a, Block>;
-
-	#[inline(always)]
-	fn into_iter(self) -> Self::IntoIter {
-		self.iter_mut()
 	}
 }
