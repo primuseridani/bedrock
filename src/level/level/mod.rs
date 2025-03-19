@@ -2,9 +2,9 @@
 
 mod load_builtin;
 
-use crate::graphics::Rgba;
 use crate::level::Chunk;
 
+use polywave::colour::Css;
 use std::borrow::Cow;
 
 #[derive(Clone, Debug)]
@@ -13,7 +13,7 @@ pub struct Level {
 	pub creatour:    Cow<'static, str>,
 	pub description: Cow<'static, str>,
 
-	pub background: Rgba,
+	pub background: Css,
 
 	pub chunks: Cow<'static, [Chunk]>,
 }

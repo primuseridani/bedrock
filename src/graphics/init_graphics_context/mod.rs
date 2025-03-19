@@ -5,8 +5,7 @@ mod new;
 mod render_frame;
 mod resize;
 
-use crate::graphics::Rgba;
-
+use polywave::colour::Css;
 use std::pin::Pin;
 use winit::window::Window;
 
@@ -17,7 +16,7 @@ pub struct InitGraphicsContext {
 	vertex_count: u32,
 	vertex_buf:   wgpu::Buffer,
 
-	texture_buf:        Box<[Rgba]>,
+	texture_buf:        Box<[Css]>,
 	texture_bind_group: wgpu::BindGroup,
 	texture:            wgpu::Texture,
 

@@ -57,9 +57,17 @@ impl App {
 					}
 
 					Event {
-						lhs:    block.is_emtpy() || block.is_liquid(),
+						lhs:    block.is_emtpy(),
 						rhs:    !next_block.is_static() && !next_block.is_liquid(),
 						chance: 0x1F / 0x20,
+					} => {
+						swap(block, next_block);
+					}
+
+					Event {
+						lhs:    block.is_liquid(),
+						rhs:    !next_block.is_static() && !next_block.is_liquid(),
+						chance: 0x1 / 0x2,
 					} => {
 						swap(block, next_block);
 					}

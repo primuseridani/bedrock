@@ -1,12 +1,14 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{InitGraphicsContext, Rgba};
+use crate::graphics::InitGraphicsContext;
 use crate::level::{Block, Material};
 use crate::map::Map;
 
+use polywave::colour::Css;
+
 impl InitGraphicsContext {
 	pub fn draw_map(&mut self, map: &Map, (pan_x, pan_y): (u32, u32), scale: u32) {
-		self.texture_buf.fill(Rgba::TRANSPARENT);
+		self.texture_buf.fill(Css::TRANSPARENT);
 
 		let global_scale = f64::from(Self::TEXTURE_WIDTH);
 		let local_scale  = f64::from(scale);
@@ -43,132 +45,134 @@ impl InitGraphicsContext {
 
 #[inline]
 #[must_use]
-const fn block_colour(block: Block) -> Rgba {
+const fn block_colour(block: Block) -> Css {
+	const DEFAULT_COLOUR: Css = Css::from_u32(0xFF00FFFF);
+
 	let colours: [_; 0x4] = match block.material() {
 		Material::Air => [
-			Rgba::from_u32(0x00000000),
-			Rgba::from_u32(0x00000000),
-			Rgba::from_u32(0x00000000),
-			Rgba::from_u32(0x00000000),
+			Css::from_u32(0x00000000),
+			Css::from_u32(0x00000000),
+			Css::from_u32(0x00000000),
+			Css::from_u32(0x00000000),
 		],
 
 		Material::Basalt => [
-			Rgba::from_u32(0x171717FF),
-			Rgba::from_u32(0x3A3A3AFF),
-			Rgba::from_u32(0x2A2A2AFF),
-			Rgba::from_u32(0x1F1F1FFF),
+			Css::from_u32(0x171717FF),
+			Css::from_u32(0x3A3A3AFF),
+			Css::from_u32(0x2A2A2AFF),
+			Css::from_u32(0x1F1F1FFF),
 		],
 
 		Material::Bedrock => [
-			Rgba::from_u32(0x252525FF),
-			Rgba::from_u32(0xD7D7D7FF),
-			Rgba::from_u32(0x4B4B4BFF),
-			Rgba::from_u32(0xA2A2A2FF),
+			Css::from_u32(0x252525FF),
+			Css::from_u32(0xD7D7D7FF),
+			Css::from_u32(0x4B4B4BFF),
+			Css::from_u32(0xA2A2A2FF),
 		],
 
 		Material::Clay => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Dirt => [
-			Rgba::from_u32(0x4F2D11FF),
-			Rgba::from_u32(0x4F341DFF),
-			Rgba::from_u32(0x53361DFF),
-			Rgba::from_u32(0x4C2F16FF),
+			Css::from_u32(0x4F2D11FF),
+			Css::from_u32(0x4F341DFF),
+			Css::from_u32(0x53361DFF),
+			Css::from_u32(0x4C2F16FF),
 		],
 
 		Material::Fire => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Glass => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Granite => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Grass => [
-			Rgba::from_u32(0x9AB34EFF),
-			Rgba::from_u32(0x6D913FFF),
-			Rgba::from_u32(0x98AA39FF),
-			Rgba::from_u32(0xB3CC60FF),
+			Css::from_u32(0x9AB34EFF),
+			Css::from_u32(0x6D913FFF),
+			Css::from_u32(0x98AA39FF),
+			Css::from_u32(0xB3CC60FF),
 		],
 
 		Material::Gravel => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Ice => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Limestone => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Magma => [
-			Rgba::from_u32(0xFF4800FF),
-			Rgba::from_u32(0xFF8200FF),
-			Rgba::from_u32(0xFFA000FF),
-			Rgba::from_u32(0xFEB300FF),
+			Css::from_u32(0xFF4800FF),
+			Css::from_u32(0xFF8200FF),
+			Css::from_u32(0xFFA000FF),
+			Css::from_u32(0xFEB300FF),
 		],
 
 		Material::Marble => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 
 		Material::Sand => [
-			Rgba::from_u32(0xF5D88FFF),
-			Rgba::from_u32(0xF8E5B4FF),
-			Rgba::from_u32(0xFCEDC5FF),
-			Rgba::from_u32(0xF7D479FF),
+			Css::from_u32(0xF5D88FFF),
+			Css::from_u32(0xF8E5B4FF),
+			Css::from_u32(0xFCEDC5FF),
+			Css::from_u32(0xF7D479FF),
 		],
 
 		Material::Stone => [
-			Rgba::from_u32(0x6D6D6DFF),
-			Rgba::from_u32(0x797979FF),
-			Rgba::from_u32(0x616161FF),
-			Rgba::from_u32(0x595959FF),
+			Css::from_u32(0x6D6D6DFF),
+			Css::from_u32(0x797979FF),
+			Css::from_u32(0x616161FF),
+			Css::from_u32(0x595959FF),
 		],
 
 		Material::Water => [
-			Rgba::from_u32(0x286DC3BF),
-			Rgba::from_u32(0x2565B8BF),
-			Rgba::from_u32(0x1F69BCBF),
-			Rgba::from_u32(0x2566B4BF),
+			Css::from_u32(0x286DC3BF),
+			Css::from_u32(0x2565B8BF),
+			Css::from_u32(0x1F69BCBF),
+			Css::from_u32(0x2566B4BF),
 		],
 
 		Material::Wood => [
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
-			Rgba::DEFAULT,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
+			DEFAULT_COLOUR,
 		],
 	};
 

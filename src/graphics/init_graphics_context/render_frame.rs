@@ -1,12 +1,13 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{InitGraphicsContext, Rgba};
+use crate::graphics::InitGraphicsContext;
 
+use polywave::colour::{Colour, Css};
 use std::iter;
 use zerocopy::IntoBytes;
 
 impl InitGraphicsContext {
-	pub fn render_frame(&mut self, background: Rgba) {
+	pub fn render_frame(&mut self, background: Css) {
 		let output = match self.surface.get_current_texture() {
 			Ok(output) => output,
 
@@ -33,7 +34,7 @@ impl InitGraphicsContext {
 			self.texture_buf.as_bytes(),
 			wgpu::TexelCopyBufferLayout {
 				offset:         0x0,
-				bytes_per_row:  Some(size_of::<Rgba>() as u32 * Self::TEXTURE_WIDTH),
+				bytes_per_row:  Some(size_of::<Css>() as u32 * Self::TEXTURE_WIDTH),
 				rows_per_image: Some(Self::TEXTURE_WIDTH),
 			},
 			Self::TEXTURE_EXTENT,

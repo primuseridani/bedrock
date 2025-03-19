@@ -1,6 +1,6 @@
 [package]
 name       = "bedrock"
-version    = "0.4.0-5"
+version    = "0.4.0-6"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "ssh://git@ssh.mandelbrot.dk:bedrock"
@@ -13,6 +13,7 @@ toml     = "0.8"
 wgpu     = "24.0"
 winit    = "0.30"
 
+polywave = { version = "0.2", features = ["zerocopy", "wgpu"] }
 serde    = { version = "1.0", features = ["derive"] }
 zerocopy = { version = "0.8", features = ["derive"] }
 
