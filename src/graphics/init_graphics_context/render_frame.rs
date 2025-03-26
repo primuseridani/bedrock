@@ -9,24 +9,18 @@ use zerocopy::IntoBytes;
 impl InitGraphicsContext {
 	pub fn render_frame(&mut self, background: Html) {
 		let background = {
-			let (r, g, b, a) = background.get();
-
-			let f = |colour: u8| -> f64 {
-				let mut colour = f64::from(colour) / f64::from(u8::MAX);
-
-				colour = if colour > 0.040_450 {
-					((colour + 0.055) / 1.055).powf(2.4)
-				} else {
-					colour / 12.920
-				};
-
-				colour
+			let to_f64 = |colour: u8| -> f64 {
+				f64::from(colour) / f64::from(u8::MAX)
 			};
 
-			let r = f(r);
-			let g = f(g);
-			let b = f(b);
-			let a = a.into();
+			let (colour, a) = background.to_s_rgba().detach();
+
+			let a = to_f64(a);
+
+			let (r, g, b) = colour
+				.map(to_f64)
+				.untransfer()
+				.get();
 
 			wgpu::Color { r, g, b, a }
 		};

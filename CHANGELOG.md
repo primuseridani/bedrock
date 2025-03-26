@@ -3,6 +3,10 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0
+
+* Finalise version
+
 ## 0.4.0-7
 
 * Enable Jemalloc

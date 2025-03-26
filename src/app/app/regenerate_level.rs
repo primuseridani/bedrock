@@ -72,8 +72,6 @@ impl App {
 
 				if y == 0x0 {
 					block.set_material(Material::Bedrock);
-				} else if y == 0x80 {
-					block.set_material(Material::Dirt);
 				} else if y < terrain_height {
 					block.set_material(chunk.ground);
 				}
