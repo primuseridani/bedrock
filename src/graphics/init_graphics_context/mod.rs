@@ -5,7 +5,7 @@ mod new;
 mod render_frame;
 mod resize;
 
-use polywave::colour::Css;
+use polywave::www::Html;
 use std::pin::Pin;
 use winit::window::Window;
 
@@ -16,7 +16,7 @@ pub struct InitGraphicsContext {
 	vertex_count: u32,
 	vertex_buf:   wgpu::Buffer,
 
-	texture_buf:        Box<[Css]>,
+	texture_buf:        Box<[Html]>,
 	texture_bind_group: wgpu::BindGroup,
 	texture:            wgpu::Texture,
 

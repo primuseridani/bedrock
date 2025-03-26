@@ -4,7 +4,7 @@ mod load_builtin;
 
 use crate::level::Chunk;
 
-use polywave::colour::Css;
+use polywave::www::Html;
 use std::borrow::Cow;
 
 #[derive(Clone, Debug)]
@@ -13,7 +13,7 @@ pub struct Level {
 	pub creatour:    Cow<'static, str>,
 	pub description: Cow<'static, str>,
 
-	pub background: Css,
+	pub background: Html,
 
 	pub chunks: Cow<'static, [Chunk]>,
 }

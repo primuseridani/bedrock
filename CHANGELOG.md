@@ -3,6 +3,10 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.4.0-7
+
+* Enable Jemalloc
+
 ## 0.4.0-6
 
 * Support CSS colours in level presets

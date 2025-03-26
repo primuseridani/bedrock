@@ -20,6 +20,13 @@ mod map;
 mod log;
 mod version;
 
+#[cfg(not(target_env = "msvc"))]
+use tikv_jemallocator::Jemalloc;
+
+#[cfg(not(target_env = "msvc"))]
+#[global_allocator]
+static GLOBAL_ALLOCATOR: Jemalloc = Jemalloc;
+
 fn main() -> ! {
 	use crate::app::App;
 	use crate::log::log;

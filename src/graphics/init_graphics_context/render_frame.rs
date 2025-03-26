@@ -2,12 +2,35 @@
 
 use crate::graphics::InitGraphicsContext;
 
-use polywave::colour::{Colour, Css};
+use polywave::www::Html;
 use std::iter;
 use zerocopy::IntoBytes;
 
 impl InitGraphicsContext {
-	pub fn render_frame(&mut self, background: Css) {
+	pub fn render_frame(&mut self, background: Html) {
+		let background = {
+			let (r, g, b, a) = background.get();
+
+			let f = |colour: u8| -> f64 {
+				let mut colour = f64::from(colour) / f64::from(u8::MAX);
+
+				colour = if colour > 0.040_450 {
+					((colour + 0.055) / 1.055).powf(2.4)
+				} else {
+					colour / 12.920
+				};
+
+				colour
+			};
+
+			let r = f(r);
+			let g = f(g);
+			let b = f(b);
+			let a = a.into();
+
+			wgpu::Color { r, g, b, a }
+		};
+
 		let output = match self.surface.get_current_texture() {
 			Ok(output) => output,
 
@@ -34,7 +57,7 @@ impl InitGraphicsContext {
 			self.texture_buf.as_bytes(),
 			wgpu::TexelCopyBufferLayout {
 				offset:         0x0,
-				bytes_per_row:  Some(size_of::<Css>() as u32 * Self::TEXTURE_WIDTH),
+				bytes_per_row:  Some(size_of::<Html>() as u32 * Self::TEXTURE_WIDTH),
 				rows_per_image: Some(Self::TEXTURE_WIDTH),
 			},
 			Self::TEXTURE_EXTENT,
@@ -58,7 +81,7 @@ impl InitGraphicsContext {
 						resolve_target: None,
 
 						ops: wgpu::Operations {
-							load: wgpu::LoadOp::Clear(background.to_wgpu_color_lossy()),
+							load: wgpu::LoadOp::Clear(background),
 
 							store: wgpu::StoreOp::Store,
 						},

@@ -2,7 +2,7 @@
 
 use crate::level::{Chunk, Level, Material};
 
-use polywave::colour::Css;
+use polywave::www::Html;
 use std::borrow::Cow;
 
 impl Level {
@@ -23,7 +23,7 @@ impl Level {
 		creatour:    Cow::Borrowed("Achernar"),
 		description: Cow::Borrowed("A flat field."),
 
-		background: Css::from_u32(0x9DD8FEFF),
+		background: Html::from_u32(0x9DD8FEFF),
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
@@ -39,7 +39,7 @@ impl Level {
 		creatour:    Cow::Borrowed("Achernar"),
 		description: Cow::Borrowed("A simple mountain."),
 
-		background: Css::from_u32(0xD0D0D0FF),
+		background: Html::from_u32(0xD0D0D0FF),
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
@@ -61,7 +61,7 @@ impl Level {
 		creatour:    Cow::Borrowed("Achernar"),
 		description: Cow::Borrowed("A simple valley."),
 
-		background: Css::from_u32(0x017DA9FF),
+		background: Html::from_u32(0x017DA9FF),
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
@@ -89,7 +89,7 @@ impl Level {
 		creatour:    Cow::Borrowed("Achernar"),
 		description: Cow::Borrowed("A nice lake."),
 
-		background: Css::from_u32(0xDB5F02FF),
+		background: Html::from_u32(0xDB5F02FF),
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
@@ -117,7 +117,7 @@ impl Level {
 		creatour:    Cow::Borrowed("Achernar"),
 		description: Cow::Borrowed("A not-so-nice lake."),
 
-		background: Css::from_u32(0xBA0628FF),
+		background: Html::from_u32(0xBA0628FF),
 
 		chunks: Cow::Borrowed(&[
 			Chunk {

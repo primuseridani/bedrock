@@ -15,7 +15,7 @@ impl Version {
 		major: 0x0,
 		minor: 0x4,
 		patch: 0x0,
-		pre:   Some(0x6),
+		pre:   Some(0x7),
 	};
 }
 
