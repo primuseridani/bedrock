@@ -8,18 +8,6 @@ pub struct Block(u8);
 
 impl Block {
 	#[inline]
-	#[must_use]
-	pub const fn new(material: Material, seed: u8) -> Self {
-		let     material = material as u8 & 0b00111111;
-		let mut seed     = seed           & 0b00000011;
-
-		seed <<= 0x6;
-
-		let value = material | seed;
-		Self(value)
-	}
-
-	#[inline]
 	pub const fn set_material(&mut self, material: Material) {
 		let material = material as u8 & 0b00111111;
 
@@ -32,6 +20,20 @@ impl Block {
 	}
 
 	#[inline]
+	pub const fn set_seed(&mut self, seed: u8) {
+		let mut seed = seed & 0b00000011;
+
+		seed <<= 0x6;
+
+		let mut value = self.0;
+
+		value &= 0b00111111;
+		value |= seed;
+
+		self.0 = value;
+	}
+
+	#[inline]
 	#[must_use]
 	pub const fn material(self) -> Material {
 		let material = self.0 & 0b00111111;
@@ -39,6 +41,9 @@ impl Block {
 		// SAFETY: We have applied an appropriate mask.
 		// These bits also only come from a previously-ex-
 		// isting `Material` object.
+		//
+		// Also note that `0x0` will is defined as `Air`,
+		// which makes `<Self as Default>::default` sound.
 		unsafe { Material::new_unchecked(material) }
 	}
 
@@ -68,7 +73,7 @@ impl Block {
 			Material::Magma     => BlockTags::HOT.union(BlockTags::LIQUID),
 			Material::Marble    => BlockTags::STATIC,
 			Material::Sand      => BlockTags::NONE,
-			Material::Stone     => BlockTags::STATIC,
+			Material::Rock     => BlockTags::STATIC,
 			Material::Water     => BlockTags::LIQUID,
 			Material::Ice       => BlockTags::COLD.union(BlockTags::STICKY),
 			Material::Wood      => BlockTags::STICKY,

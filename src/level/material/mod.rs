@@ -9,10 +9,10 @@ use std::str::FromStr;
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum Material {
 	#[default]
-	Air,
+	Air = 0x0,
 
 	Bedrock,
-	Stone,
+	Rock,
 	Dirt,
 	Sand,
 	Water,
@@ -55,7 +55,7 @@ impl FromStr for Material {
 			"magma"     => Ok(Self::Magma),
 			"marble"    => Ok(Self::Marble),
 			"sand"      => Ok(Self::Sand),
-			"stone"     => Ok(Self::Stone),
+			"rock"     => Ok(Self::Rock),
 			"water"     => Ok(Self::Water),
 
 			_ => Err(MaterialFromStrError { name: s.into() })

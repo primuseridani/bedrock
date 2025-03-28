@@ -154,7 +154,7 @@ const fn block_colour(block: Block) -> Html {
 			Html::from_u32(0xF7D479FF),
 		],
 
-		Material::Stone => [
+		Material::Rock => [
 			Html::from_u32(0x6D6D6DFF),
 			Html::from_u32(0x797979FF),
 			Html::from_u32(0x616161FF),

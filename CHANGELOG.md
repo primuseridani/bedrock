@@ -3,6 +3,15 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-0
+
+* Add layers to level configuration
+* Update some maps
+* Add docs for some facilities
+* Support custom widths in chunks
+* Rewrite level generator
+* Rename `Stone` block to `Rock`
+
 ## 0.4.0
 
 * Finalise version

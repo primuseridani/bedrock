@@ -2,7 +2,7 @@
 
 use crate::app::App;
 use crate::error::{Error, Result};
-use crate::level::{Chunk, Level};
+use crate::level::{Chunk, Layer, Level};
 use crate::log::log;
 
 use serde::Deserialize;
@@ -26,8 +26,15 @@ struct LevelLevelHelper {
 
 #[derive(Debug, Deserialize)]
 struct LevelChunkHelper {
-	pub terrain_height: f64,
-	pub ground:         String,
+	pub width: f64,
+
+	pub layers: Vec<LevelChunkLayerHelper>,
+}
+
+#[derive(Debug, Deserialize)]
+struct LevelChunkLayerHelper {
+	pub height:   f64,
+	pub material: String,
 }
 
 impl App {
@@ -58,26 +65,43 @@ impl App {
 			let file = read_to_string(&path)
 				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
 
+			let parse_chunk_layer = |helper: LevelChunkLayerHelper| -> Result<Layer> {
+				let material = helper
+					.material
+					.parse()
+					.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
+
+				let layer = Layer {
+					height:   helper.height,
+					material,
+				};
+
+				Ok(layer)
+			};
+
+			let parse_chunk = |helper: LevelChunkHelper| -> Result<Chunk> {
+				let layers = helper
+					.layers
+					.into_iter()
+					.map(parse_chunk_layer)
+					.collect::<Result<_>>()?;
+
+				let chunk = Chunk {
+					width:  helper.width,
+
+					layers,
+				};
+
+				Ok(chunk)
+			};
+
 			let helper = toml::from_str::<LevelHelper>(&file)
 				.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?;
 
 			let chunks = helper
 				.chunk
 				.into_iter()
-				.map(|chunk_helper| {
-					let chunk = Chunk {
-						terrain_height: chunk_helper.terrain_height,
-
-						ground: {
-							chunk_helper
-								.ground
-								.parse()
-								.map_err(|e| Error::UnknownLevel { path: path.clone().into(), source: Box::new(e) })?
-						}
-					};
-
-					Ok(chunk)
-				})
+				.map(parse_chunk)
 				.collect::<Result<_>>()?;
 
 			let background = helper

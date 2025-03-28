@@ -1,8 +1,9 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::app::App;
-use crate::level::{Block, Material};
-use crate::log::log;
+use crate::level::{Block, Chunk, Layer, Material};
+use crate::log::{self, log};
+use crate::map::Map;
 
 use rand::random;
 
@@ -13,19 +14,17 @@ impl App {
 		log!(note, "config is: {:?}", self.config);
 		log!(note, "level is: {:?}", self.level);
 
-		assert!(!self.level.chunks.is_empty());
-
 		assert!(self.level.chunks.len() <= u8::MAX as usize);
 
 		self.map.resize(self.config.map_size);
 
+		roll_seeds(&mut self.map);
+
 		let mut chunks = self.level.chunks.iter();
 
-		let chunk_count = chunks.len() as u8;
+		let mut current_chunk = None::<&Chunk>;
 
-		let mut chunk_index = 0x0u8;
-		let mut chunk_stop  = 0x0u32;
-		let mut chunk       = None;
+		let mut chunk_stop = 0x0u32;
 
 		let columns = self
 			.map
@@ -34,50 +33,78 @@ impl App {
 			.map(|(x, column)| (x as u32, column));
 
 		for (x, column) in columns {
-			while x >= chunk_stop {
-				chunk_index += 0x1;
+			let chunk = if x >= chunk_stop {
+				let Some(chunk) = chunks.next() else {
+					break;
+				};
 
-				// NOTE: This cannot overflow as even with ex-
-				// tremes:
-				//
-				//           FFFFFFFE u32
-				// *               FF u8
-				// = 000000FEFFFFFE02 u64
-				//
-				// ... which nicely fits in `u64`. `chunk_count`
-				// can additionally not be null. Now also remember
-				// that it is tied to `chunk_index`; if the latter
-				// is great then the former must also be great,
-				// cancelling each other out:
-				//
-				//   000000FEFFFFFE02 u64
-				// /               FF u8
-				// =         FFFFFFFE u32
-				chunk_stop = (self.config.map_size.width() as u64 * chunk_index as u64 / chunk_count as u64) as u32;
+				let chunk_start = x;
+				let chunk_width = (f64::from(self.config.map_size.width()) * chunk.width) as u32;
 
-				chunk = chunks.next();
-			}
+				chunk_stop = chunk_start + chunk_width;
 
-			let chunk = chunk.unwrap();
+				chunk
+			} else if let Some(chunk) = current_chunk {
+				chunk
+			} else {
+				break;
+			};
 
-			let terrain_height = (f64::from(self.config.map_size.height()) * chunk.terrain_height.clamp(0.0, 1.0)) as u32;
+			generate_column(column, self.config.map_size.height(), chunk);
 
-			let blocks = column
-				.iter_mut()
-				.enumerate()
-				.map(|(y, block)| (y as u32, block));
+			current_chunk = Some(chunk);
+		}
 
-			for (y, slot) in blocks {
-				let mut block = Block::new(Default::default(), random());
+		fill_bedrock(&mut self.map);
+	}
+}
+fn roll_seeds(map: &mut Map) {
+	for cell in map.columns_mut().flat_map(<[_]>::iter_mut) {
+		let seed = random();
+		cell.set_seed(seed);
+	}
+}
 
-				if y == 0x0 {
-					block.set_material(Material::Bedrock);
-				} else if y < terrain_height {
-					block.set_material(chunk.ground);
-				}
+fn generate_column(column: &mut [Block], map_height: u32, chunk: &Chunk) {
+	let mut layers = chunk.layers.iter();
 
-				*slot = block;
-			}
+	let mut current_layer = None::<&Layer>;
+
+	let mut layer_stop = 0x0u32;
+
+	let cells = column
+		.iter_mut()
+		.enumerate()
+		.map(|(y, block)| (y as u32, block));
+
+	for (y, cell) in cells {
+		let layer = if y >= layer_stop {
+			let Some(layer) = layers.next() else {
+				break;
+			};
+
+			let layer_start = y;
+			let layer_width = (f64::from(map_height) * layer.height) as u32;
+
+			layer_stop = layer_start + layer_width;
+
+			layer
+		} else if let Some(layer) = current_layer {
+			layer
+		} else {
+			break;
+		};
+
+		cell.set_material(layer.material);
+
+		current_layer = Some(layer);
+	}
+}
+
+fn fill_bedrock(map: &mut Map) {
+	for column in map.columns_mut() {
+		for cell in column.iter_mut().take(0x1) {
+			cell.set_material(Material::Bedrock);
 		}
 	}
 }

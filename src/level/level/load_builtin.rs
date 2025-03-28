@@ -1,6 +1,6 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::{Chunk, Level, Material};
+use crate::level::{Chunk, Layer, Level, Material};
 
 use polywave::www::Html;
 use std::borrow::Cow;
@@ -27,9 +27,15 @@ impl Level {
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
-				terrain_height: 1.0 / 3.0,
+				width: 1.0,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 1.0 / 3.0,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 		]),
 	};
@@ -43,15 +49,27 @@ impl Level {
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
-				terrain_height: 1.0 / 3.0,
+				width: 0.5,
 
-				ground: Material::Stone,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 1.0 / 3.0,
+
+						material: Material::Rock,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.5,
+				width: 0.5,
 
-				ground: Material::Stone,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.5,
+
+						material: Material::Rock,
+					},
+				]),
 			},
 		]),
 	};
@@ -65,21 +83,45 @@ impl Level {
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
-				terrain_height: 0.5,
+				width: 0.25,
 
-				ground: Material::Stone,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.5,
+
+						material: Material::Rock,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.25,
+				width: 0.5,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.125,
+
+						material: Material::Rock,
+					},
+
+					Layer {
+						height: 0.125,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.5,
+				width: 0.25,
 
-				ground: Material::Stone,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.5,
+
+						material: Material::Rock,
+					},
+				]),
 			},
 		]),
 	};
@@ -93,21 +135,45 @@ impl Level {
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
-				terrain_height: 0.25,
+				width: 1.0 / 3.0,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.25,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.125,
+				width: 1.0 / 3.0,
 
-				ground: Material::Water,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.062500,
+
+						material: Material::Dirt,
+					},
+
+					Layer {
+						height: 0.125,
+
+						material: Material::Water,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.25,
+				width: 1.0 / 3.0,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.25,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 		]),
 	};
@@ -121,21 +187,45 @@ impl Level {
 
 		chunks: Cow::Borrowed(&[
 			Chunk {
-				terrain_height: 0.25,
+				width: 1.0 / 3.0,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.25,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.125,
+				width: 1.0 / 3.0,
 
-				ground: Material::Magma,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.062500,
+
+						material: Material::Dirt,
+					},
+
+					Layer {
+						height: 0.125,
+
+						material: Material::Magma,
+					},
+				]),
 			},
 
 			Chunk {
-				terrain_height: 0.25,
+				width: 1.0 / 3.0,
 
-				ground: Material::Dirt,
+				layers: Cow::Borrowed(&[
+					Layer {
+						height: 0.25,
+
+						material: Material::Dirt,
+					},
+				]),
 			},
 		]),
 	};

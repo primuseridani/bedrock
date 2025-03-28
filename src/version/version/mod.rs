@@ -13,9 +13,9 @@ pub struct Version {
 impl Version {
 	pub const CURRENT: Self = Self {
 		major: 0x0,
-		minor: 0x4,
+		minor: 0x5,
 		patch: 0x0,
-		pre:   None,
+		pre:   Some(0x0),
 	};
 }
 
