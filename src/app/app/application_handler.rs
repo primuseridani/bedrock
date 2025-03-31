@@ -31,11 +31,10 @@ impl ApplicationHandler<UserEvent> for App {
 			}
 
 			WindowEvent::KeyboardInput { device_id, event, is_synthetic } => {
-				self.handle_keyboard_input(event_loop, device_id, event, is_synthetic);
+				self.handle_keyboard(event_loop, device_id, event, is_synthetic);
 			}
 
 			WindowEvent::ModifiersChanged(modifiers) => {
-				log!(note, "keyboard modifiers changed: `{modifiers:?}`");
 				self.keyboard_modifiers = modifiers;
 			}
 
@@ -44,12 +43,12 @@ impl ApplicationHandler<UserEvent> for App {
 			}
 
 			WindowEvent::RedrawRequested => {
-				let graphics_context = self.graphics_context.unwrap();
+				let graphics_context = self.graphics_context.unwrap_mut();
 				graphics_context.render_frame(self.level.background);
 			}
 
 			WindowEvent::Resized(size) => {
-				let graphics_context = self.graphics_context.unwrap();
+				let graphics_context = self.graphics_context.unwrap_mut();
 				graphics_context.resize((size.width, size.height));
 			}
 
@@ -69,11 +68,11 @@ impl ApplicationHandler<UserEvent> for App {
 
 			self.tick();
 
-			let graphics_context = self.graphics_context.unwrap();
+			let graphics_context = self.graphics_context.unwrap_mut();
 			graphics_context.draw_map(&self.map, self.view_pan, self.view_scale);
 		}
 
-		let graphics_context = self.graphics_context.unwrap();
+		let graphics_context = self.graphics_context.unwrap_mut();
 		graphics_context.redraw_window();
 	}
 
@@ -86,7 +85,7 @@ impl ApplicationHandler<UserEvent> for App {
 			}
 
 			UserEvent::RedrawMap => {
-				let graphics_context = self.graphics_context.unwrap();
+				let graphics_context = self.graphics_context.unwrap_mut();
 				graphics_context.draw_map(&self.map, self.view_pan, self.view_scale);
 			}
 		}

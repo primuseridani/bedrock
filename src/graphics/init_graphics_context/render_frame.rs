@@ -33,7 +33,7 @@ impl InitGraphicsContext {
 
 		let view = {
 			let descriptor = wgpu::TextureViewDescriptor {
-				label: Some("main"),
+				label: Some("texture view"),
 
 				..Default::default()
 			};
@@ -59,7 +59,7 @@ impl InitGraphicsContext {
 
 		let mut encoder = {
 			let descriptor = wgpu::CommandEncoderDescriptor {
-				label: Some("main"),
+				label: Some("command encoder"),
 			};
 
 			self.device.create_command_encoder(&descriptor)
@@ -67,7 +67,7 @@ impl InitGraphicsContext {
 
 		{
 			let descriptor = wgpu::RenderPassDescriptor {
-				label: Some("main"),
+				label: Some("render pass"),
 
 				color_attachments: &[
 					Some(wgpu::RenderPassColorAttachment {

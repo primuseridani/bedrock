@@ -1,7 +1,8 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 mod application_handler;
-mod handle_input;
+mod handle_keyboard;
+mod handle_mouse_wheel;
 mod load_level;
 mod regenerate_level;
 mod run;
@@ -38,6 +39,8 @@ pub struct App {
 	view_scale: u32,
 
 	next_tick: Instant,
+
+	is_paused: bool,
 }
 
 impl App {

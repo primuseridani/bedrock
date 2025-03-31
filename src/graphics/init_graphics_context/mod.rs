@@ -44,4 +44,13 @@ impl InitGraphicsContext {
 	pub fn redraw_window(&mut self) {
 		self.window.request_redraw();
 	}
+
+	#[expect(unused)]
+	#[inline(always)]
+	#[must_use]
+	pub const fn size(&self) -> (u32, u32) {
+		let wgpu::SurfaceConfiguration { width, height, .. } = self.surface_config;
+
+		(width, height)
+	}
 }

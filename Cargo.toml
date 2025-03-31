@@ -1,6 +1,6 @@
 [package]
 name       = "bedrock"
-version    = "0.5.0-0"
+version    = "0.5.0-1"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "https://mandelbrot.dk/achernar/bedrock/"

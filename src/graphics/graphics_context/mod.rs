@@ -6,17 +6,19 @@ use std::hint::cold_path;
 use winit::event_loop::ActiveEventLoop;
 
 #[expect(clippy::large_enum_variant)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum GraphicsContext {
+	#[default]
 	Uninit,
 
 	Init(InitGraphicsContext),
 }
 
 impl GraphicsContext {
+	#[expect(unused)]
 	#[inline(always)]
 	#[must_use]
-	pub const fn new() -> Self {
+	pub const fn uninit() -> Self {
 		Self::Uninit
 	}
 
@@ -43,11 +45,27 @@ impl GraphicsContext {
 		*self = Self::Init(context);
 	}
 
+	#[expect(unused)]
 	#[inline(always)]
 	#[must_use]
 	#[track_caller]
-	pub const fn unwrap(&mut self) -> &mut InitGraphicsContext {
+	pub const fn unwrap(&self) -> &InitGraphicsContext {
+		let Self::Init(ref context) = *self else {
+			cold_path();
+
+			panic!("expected initialised graphics context but found none");
+		};
+
+		context
+	}
+
+	#[inline(always)]
+	#[must_use]
+	#[track_caller]
+	pub const fn unwrap_mut(&mut self) -> &mut InitGraphicsContext {
 		let Self::Init(ref mut context) = *self else {
+			cold_path();
+
 			panic!("expected initialised graphics context but found none");
 		};
 
@@ -65,12 +83,5 @@ impl GraphicsContext {
 	#[must_use]
 	pub const fn is_init(&self) -> bool {
 		matches!(*self, Self::Init(_))
-	}
-}
-
-impl Default for GraphicsContext {
-	#[inline(always)]
-	fn default() -> Self {
-		Self::new()
 	}
 }

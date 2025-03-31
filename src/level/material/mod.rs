@@ -5,6 +5,7 @@ use crate::level::MaterialFromStrError;
 use std::mem::transmute;
 use std::str::FromStr;
 
+#[allow(unused)]
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum Material {

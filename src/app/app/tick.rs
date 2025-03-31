@@ -47,6 +47,10 @@ macro_rules! select_events {
 
 impl App {
 	pub(super) fn tick(&mut self) {
+		if self.is_paused {
+			return;
+		}
+
 		let mut columns = self.map.columns_mut();
 
 		while let Some(mut windows) = columns.next_as_windows_mut() {

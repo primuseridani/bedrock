@@ -20,14 +20,17 @@ impl App {
 		eprintln!("\u{001B}[002mCopyright \u{00A9} 2025 Gabriel Bj\u{00F8}rnager Jensen.\u{001B}[022m");
 		eprintln!();
 		eprintln!("Controls (en-gb):");
-		eprintln!("  esc                : quit game");
+		eprintln!("  esc                : pause / unpause");
+		eprintln!("  q                  : quit (whilst paused)");
 		eprintln!();
+		eprintln!("  mwheelup           : pan right");
+		eprintln!("  mwheeldown         : pan left");
+		eprintln!("  mwheel2up OR");
+		eprintln!("  shift + mwheelup   : pan up");
+		eprintln!("  mwheel2down OR");
+		eprintln!("  shift + mwheeldown : pan down");
 		eprintln!("  ctrl + mwheelup    : zoom in");
 		eprintln!("  ctrl + mwheeldown  : zoom out");
-		eprintln!("  lalt + mwheelup    : pan right");
-		eprintln!("  lalt + mwheeldown  : pan left");
-		eprintln!("  shift + mwheelup   : pan up");
-		eprintln!("  shift + mwheeldown : pan down");
 		eprintln!();
 		eprintln!("  plus               : increas tps");
 		eprintln!("  hyphen             : decrease tps");
@@ -64,6 +67,8 @@ impl App {
 			view_scale: Self::MIN_VIEW_SCALE,
 
 			next_tick: Instant::now(),
+
+			is_paused: Default::default()
 		};
 
 		this.init()?;

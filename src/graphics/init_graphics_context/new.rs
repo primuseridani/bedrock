@@ -113,7 +113,7 @@ impl InitGraphicsContext {
 
 		let shader = {
 			let descriptor = wgpu::ShaderModuleDescriptor {
-				label:  Some("main"),
+				label:  Some("shader"),
 				source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(MAIN_SHADER)),
 			};
 
@@ -124,7 +124,7 @@ impl InitGraphicsContext {
 
 		let texture = {
 			let descriptor = wgpu::TextureDescriptor {
-				label:           Some("main"),
+				label:           Some("texture"),
 				size:            Self::TEXTURE_EXTENT,
 				mip_level_count: 0x1,
 				sample_count:    0x1,
@@ -139,7 +139,7 @@ impl InitGraphicsContext {
 
 		let texture_view = {
 			let descriptor = wgpu::TextureViewDescriptor {
-				label: Some("main"),
+				label: Some("texture view"),
 
 				..Default::default()
 			};
@@ -149,7 +149,7 @@ impl InitGraphicsContext {
 
 		let texture_sampler = {
 			let descriptor = wgpu::SamplerDescriptor {
-				label:        Some("main"),
+				label:        Some("texture sampler"),
 				border_color: Some(wgpu::SamplerBorderColor::OpaqueBlack),
 
 				..Default::default()
@@ -160,7 +160,7 @@ impl InitGraphicsContext {
 
 		let texture_bind_group_layout = {
 			let descriptor = wgpu::BindGroupLayoutDescriptor {
-				label: Some("main"),
+				label: Some("texture bind group layout"),
 
 				entries: &[
 					wgpu::BindGroupLayoutEntry {
@@ -193,7 +193,7 @@ impl InitGraphicsContext {
 
 		let texture_bind_group = {
 			let descriptor = wgpu::BindGroupDescriptor {
-				label:  Some("main"),
+				label:  Some("texture bind group"),
 				layout: &texture_bind_group_layout,
 
 				entries: &[
@@ -220,7 +220,7 @@ impl InitGraphicsContext {
 			let vertices = [Vertex::default(); 0x3];
 
 			let descriptor = BufferInitDescriptor {
-				label:    Some("main"),
+				label:    Some("vertex buffer"),
 				contents: vertices.as_bytes(),
 				usage:    wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::VERTEX,
 			};
@@ -235,7 +235,7 @@ impl InitGraphicsContext {
 
 		let pipeline = {
 			let descriptor = wgpu::PipelineLayoutDescriptor {
-				label:              Some("main"),
+				label:              Some("pipeline layout"),
 				bind_group_layouts: &[&texture_bind_group_layout],
 
 				..Default::default()
@@ -275,7 +275,7 @@ impl InitGraphicsContext {
 			};
 
 			let descriptor = wgpu::RenderPipelineDescriptor {
-				label:         Some("main"),
+				label:         Some("pipeline"),
 				layout:        Some(&layout),
 				vertex,
 				fragment:      Some(fragment),

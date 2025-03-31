@@ -3,6 +3,12 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-1
+
+* Refactor level generator
+* Support pausing
+* Update pan controls
+
 ## 0.5.0-0
 
 * Add layers to level configuration
