@@ -3,6 +3,19 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-2
+
+* Add `is_spawnable` flag to chunks
+* Update docs
+* Fix test level
+* Fix level parser expecting `layers` and not `layer`
+* Add base for players
+* Add `MissingSpawnChunk` error
+* Temporarily add `wgpu` as submodule
+* Fix lints
+* Use `f16` in graphics
+* Update lints
+
 ## 0.5.0-1
 
 * Refactor level generator

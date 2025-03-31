@@ -3,8 +3,11 @@
 mod application_handler;
 mod handle_keyboard;
 mod handle_mouse_wheel;
+mod init;
 mod load_level;
+mod main;
 mod regenerate_level;
+mod respawn_players;
 mod run;
 mod tick;
 
@@ -13,6 +16,7 @@ use crate::config::Config;
 use crate::graphics::GraphicsContext;
 use crate::level::Level;
 use crate::map::Map;
+use crate::player::Player;
 
 use std::path::PathBuf;
 use std::time::Instant;
@@ -31,7 +35,8 @@ pub struct App {
 	config:   Config,
 	level:    Level,
 
-	map: Map,
+	map:     Map,
+	players: Vec<Player>,
 
 	raw_view_scale: f64,
 

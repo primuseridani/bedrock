@@ -17,7 +17,7 @@ use zerocopy::IntoBytes;
 impl InitGraphicsContext {
 	#[must_use]
 	pub fn new(event_loop: &ActiveEventLoop) -> Self {
-		log!(debug, "creating graphics context");
+		log!(debug, "creating new graphics context");
 
 		let size = PhysicalSize {
 			width:  Self::DEFAULT_SIZE.0,
@@ -87,7 +87,7 @@ impl InitGraphicsContext {
 		log!(debug, "creating device and queue");
 
 		let (device, queue) = {
-			match block_on(adapter.request_device(&Default::default(), None)) {
+			match block_on(adapter.request_device(&Default::default())) {
 				Ok((device, queue)) => (device, queue),
 
 				Err(e) => panic!("unable to find device: {e}"),
@@ -289,7 +289,7 @@ impl InitGraphicsContext {
 			device.create_render_pipeline(&descriptor)
 		};
 
-		let mut this = Self {
+		Self {
 			pipeline,
 
 			vertex_count,
@@ -306,10 +306,6 @@ impl InitGraphicsContext {
 			surface,
 
 			window,
-		};
-
-		this.resize((size.width, size.height));
-
-		this
+		}
 	}
 }

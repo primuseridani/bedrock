@@ -29,6 +29,8 @@ impl Level {
 			Chunk {
 				width: 1.0,
 
+				is_spawnable: true,
+
 				layers: Cow::Borrowed(&[
 					Layer {
 						height: 1.0 / 3.0,
@@ -51,6 +53,8 @@ impl Level {
 			Chunk {
 				width: 0.5,
 
+				is_spawnable: true,
+
 				layers: Cow::Borrowed(&[
 					Layer {
 						height: 1.0 / 3.0,
@@ -62,6 +66,8 @@ impl Level {
 
 			Chunk {
 				width: 0.5,
+
+				is_spawnable: true,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -85,6 +91,8 @@ impl Level {
 			Chunk {
 				width: 0.25,
 
+				is_spawnable: true,
+
 				layers: Cow::Borrowed(&[
 					Layer {
 						height: 0.5,
@@ -96,6 +104,8 @@ impl Level {
 
 			Chunk {
 				width: 0.5,
+
+				is_spawnable: true,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -114,6 +124,8 @@ impl Level {
 
 			Chunk {
 				width: 0.25,
+
+				is_spawnable: true,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -137,6 +149,8 @@ impl Level {
 			Chunk {
 				width: 1.0 / 3.0,
 
+				is_spawnable: true,
+
 				layers: Cow::Borrowed(&[
 					Layer {
 						height: 0.25,
@@ -148,6 +162,8 @@ impl Level {
 
 			Chunk {
 				width: 1.0 / 3.0,
+
+				is_spawnable: false,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -166,6 +182,8 @@ impl Level {
 
 			Chunk {
 				width: 1.0 / 3.0,
+
+				is_spawnable: true,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -189,6 +207,8 @@ impl Level {
 			Chunk {
 				width: 1.0 / 3.0,
 
+				is_spawnable: true,
+
 				layers: Cow::Borrowed(&[
 					Layer {
 						height: 0.25,
@@ -200,6 +220,8 @@ impl Level {
 
 			Chunk {
 				width: 1.0 / 3.0,
+
+				is_spawnable: false,
 
 				layers: Cow::Borrowed(&[
 					Layer {
@@ -218,6 +240,8 @@ impl Level {
 
 			Chunk {
 				width: 1.0 / 3.0,
+
+				is_spawnable: true,
 
 				layers: Cow::Borrowed(&[
 					Layer {

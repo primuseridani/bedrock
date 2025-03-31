@@ -8,7 +8,6 @@ use winit::event_loop::ActiveEventLoop;
 use winit::keyboard::{KeyCode, PhysicalKey};
 
 impl App {
-	#[inline]
 	pub(super) fn handle_keyboard(
 		&mut self,
 		event_loop:    &ActiveEventLoop,
@@ -21,9 +20,10 @@ impl App {
 		if matches!(event.state, ElementState::Released) { return };
 
 		match event.physical_key {
-			| PhysicalKey::Code(KeyCode::Minus)
-			| PhysicalKey::Code(KeyCode::Equal)
-			=> {
+			PhysicalKey::Code(
+				| KeyCode::Minus
+				| KeyCode::Equal
+			) => {
 				let off: i16 = match event.physical_key {
 					PhysicalKey::Code(KeyCode::Minus) => -0x1,
 					PhysicalKey::Code(KeyCode::Equal) =>  0x1,

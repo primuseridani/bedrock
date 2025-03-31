@@ -6,16 +6,31 @@ description = "A test level."
 background = "#1F1F1F"
 
 [[chunk]]
-terrain_height = 0.0625
+width = 0.375
 
-ground = "sand"
+is_spawnable = true
+
+[[chunk.layer]]
+height = 0.125
+
+material = "sand"
 
 [[chunk]]
-terrain_height = 0.125
+width = 0.25
 
-ground = "dirt"
+is_spawnable = true
+
+[[chunk.layer]]
+height = 0.25
+
+material = "dirt"
 
 [[chunk]]
-terrain_height = 0.25
+width = 0.375
 
-ground = "rock"
+is_spawnable = false
+
+[[chunk.layer]]
+height = 0.375
+
+material = "rock"

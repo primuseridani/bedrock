@@ -92,7 +92,7 @@ where
 
 impl App {
 	pub(super) fn regenerate_level(&mut self) {
-		log!(debug, "generating level \"{}\"", self.level.name);
+		log!("generating level \"{}\"", self.level.name);
 
 		log!(note, "config is: {:?}", self.config);
 		log!(note, "level is: {:?}", self.level);

@@ -1,11 +1,13 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+#![allow(internal_features)]
+
 #![feature(cold_path)]
 #![feature(default_field_values)]
+#![feature(f16)]
 #![feature(generic_arg_infer)]
-
-// Why is this needed?
-#![expect(clippy::module_inception)]
+#![feature(portable_simd)]
+#![feature(rustc_attrs)]
 
 extern crate self as bedrock;
 
@@ -18,6 +20,7 @@ mod graphics;
 mod level;
 mod map;
 mod log;
+mod player;
 mod version;
 
 #[cfg(not(target_env = "msvc"))]
@@ -28,18 +31,5 @@ use tikv_jemallocator::Jemalloc;
 static GLOBAL_ALLOCATOR: Jemalloc = Jemalloc;
 
 fn main() -> ! {
-	use crate::app::App;
-	use crate::log::log;
-
-	use std::process::exit;
-
-	let code = if let Err(e) = App::run() {
-		log!(error, "{e}");
-
-		e.into()
-	} else {
-		0x0
-	};
-
-	exit(code);
+	app::App::main();
 }

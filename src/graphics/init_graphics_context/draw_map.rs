@@ -43,6 +43,7 @@ impl InitGraphicsContext {
 	}
 }
 
+#[expect(clippy::match_same_arms)]
 #[inline]
 #[must_use]
 const fn block_colour(block: Block) -> Html {

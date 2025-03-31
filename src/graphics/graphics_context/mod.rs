@@ -1,6 +1,7 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
 use crate::graphics::InitGraphicsContext;
+use crate::log::log;
 
 use std::hint::cold_path;
 use winit::event_loop::ActiveEventLoop;
@@ -32,8 +33,12 @@ impl GraphicsContext {
 	#[track_caller]
 	pub fn init_with<F: FnOnce(&mut InitGraphicsContext)>(&mut self, event_loop: &ActiveEventLoop, op: F) {
 		if self.is_init() {
+			log!(note, "graphics context is already initialised");
+
 			return;
 		}
+
+		log!("initialising graphics context");
 
 		// This should only happen once per run.
 		cold_path();

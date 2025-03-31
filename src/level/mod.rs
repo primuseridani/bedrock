@@ -7,6 +7,7 @@ mod layer;
 mod level;
 mod material;
 mod material_from_str_error;
+mod seed;
 
 pub use block::Block;
 pub use block_tags::BlockTags;
@@ -15,3 +16,4 @@ pub use layer::Layer;
 pub use level::Level;
 pub use material::Material;
 pub use material_from_str_error::MaterialFromStrError;
+pub use seed::Seed;

@@ -7,7 +7,6 @@ use winit::event::{DeviceId, MouseScrollDelta, TouchPhase};
 use winit::event_loop::ActiveEventLoop;
 
 impl App {
-	#[inline]
 	pub(super) fn handle_mouse_wheel(
 		&mut self,
 		_event_loop: &ActiveEventLoop,
@@ -66,7 +65,7 @@ impl App {
 			// bounded -- as to guarantee gradient increments.
 
 			if raw_view_scale >= min_raw_view_scale && raw_view_scale <= max_raw_view_scale {
-				let view_scale = (f64::from(Self::MIN_VIEW_SCALE) * 2.0f64.powf(raw_view_scale)) as u32;
+				let view_scale = (f64::from(Self::MIN_VIEW_SCALE) * raw_view_scale.exp2()) as u32;
 
 				log!(note, "new view scale is `{view_scale}`");
 
@@ -94,6 +93,7 @@ impl App {
 		}
 	}
 
+	#[inline]
 	#[track_caller]
 	fn handle_vertical_pan(&mut self, distance: f32) {
 		// Pan up or down.
@@ -117,6 +117,7 @@ impl App {
 fn get_raw_pan(base: u32, raw_factor: f32, view_scale: u32) -> u32 {
 	let pan_factor = (raw_factor.ceil() as i32).clamp(-0x1, 0x1);
 
+	#[expect(clippy::cast_possible_wrap)]
 	let pan_distance = ((view_scale / 0x10) as i32) * pan_factor;
 
 	base.saturating_add_signed(pan_distance)

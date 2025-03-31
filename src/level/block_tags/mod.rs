@@ -13,6 +13,9 @@ use std::ops::{
 	SubAssign,
 };
 
+/// A list of block tags.
+///
+/// Each [block](crate::level::Block) defines a set of tags according to a combination of its material and (potentially in the future) its seed.
 #[derive(Clone, Copy, Default, Eq, PartialEq)]
 pub struct BlockTags(u32);
 
@@ -88,7 +91,7 @@ impl BlockTags {
 
 	#[inline(always)]
 	#[must_use]
-	pub const fn invert(self) -> Self {
+	pub const fn inversion(self) -> Self {
 		let value = !self.0;
 		Self(value)
 	}
@@ -160,7 +163,7 @@ impl Not for BlockTags {
 
 	#[inline(always)]
 	fn not(self) -> Self::Output {
-		self.invert()
+		self.inversion()
 	}
 }
 

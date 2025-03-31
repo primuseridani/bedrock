@@ -28,7 +28,9 @@ struct LevelLevelHelper {
 struct LevelChunkHelper {
 	pub width: f64,
 
-	pub layers: Vec<LevelChunkLayerHelper>,
+	pub is_spawnable: bool,
+
+	pub layer: Vec<LevelChunkLayerHelper>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -51,7 +53,7 @@ impl App {
 			log!(note, "level is not a built-in");
 
 			let path = {
-				let mut path = self.data_dir.to_owned();
+				let mut path = self.data_dir.clone();
 
 				path.push("level");
 				path.push(name);
@@ -81,13 +83,15 @@ impl App {
 
 			let parse_chunk = |helper: LevelChunkHelper| -> Result<Chunk> {
 				let layers = helper
-					.layers
+					.layer
 					.into_iter()
 					.map(parse_chunk_layer)
 					.collect::<Result<_>>()?;
 
 				let chunk = Chunk {
-					width:  helper.width,
+					width: helper.width,
+
+					is_spawnable: helper.is_spawnable,
 
 					layers,
 				};

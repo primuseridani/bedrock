@@ -27,8 +27,8 @@ impl InitGraphicsContext {
 			(x_factor, y_factor)
 		};
 
-		let x_radius = (x_factor / 2.0 * 3.0) as f32;
-		let y_radius = (y_factor / 2.0 * 3.0) as f32;
+		let x_radius = (x_factor / 2.0 * 3.0) as f16;
+		let y_radius = (y_factor / 2.0 * 3.0) as f16;
 
 		let clip_top             = Vec2::new( 0.0,  3.0);
 		let clip_bottom_left     = Vec2::new(-3.0, -3.0);

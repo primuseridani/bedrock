@@ -14,6 +14,8 @@ pub enum Error {
 
 	MissingDataDir,
 
+	MissingSpawnChunk,
+
 	UnknownCliArg(Box<str>),
 
 	UnknownLevel {
@@ -27,17 +29,19 @@ impl Display for Error {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		match *self {
 			Self::InvalidLevel { ref section, ref field, ref source } => {
-				let field = if let Some(ref section) = *section {
-					Cow::Owned(section.to_string() + field)
-				} else {
-					Cow::Borrowed(&**field)
-				};
+				let field = section.as_ref().map_or_else(
+					||  Cow::Borrowed(&**field),
+					|s| Cow::Owned(s.to_string() + field),
+				);
 
 				write!(f, "invalid level field `{field}`: {source}")
 			}
 
 			Self::MissingDataDir
 			=> write!(f, "could not find data directory"),
+
+			Self::MissingSpawnChunk
+			=> write!(f, "there are no spawn chunks in the level"),
 
 			Self::UnknownCliArg(ref arg)
 			=> write!(f, "unknown command line interface \"{arg}\""),
@@ -49,6 +53,7 @@ impl Display for Error {
 }
 
 impl std::error::Error for Error {
+	#[allow(clippy::match_same_arms)]
 	#[inline]
 	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
 		match *self {
@@ -67,11 +72,14 @@ impl From<Error> for i32 {
 	#[inline]
 	fn from(value: Error) -> Self {
 		match value {
-			| Error::InvalidLevel { .. }
 			| Error::MissingDataDir
 			| Error::UnknownCliArg(_)
 			| Error::UnknownLevel { .. }
 			=> 0x2,
+
+			| Error::InvalidLevel { .. }
+			| Error::MissingSpawnChunk
+			=> 0x3,
 		}
 	}
 }

@@ -1,6 +1,6 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::level::{BlockTags, Material};
+use crate::level::{BlockTags, Material, Seed};
 
 #[repr(transparent)]
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
@@ -20,8 +20,8 @@ impl Block {
 	}
 
 	#[inline]
-	pub const fn set_seed(&mut self, seed: u8) {
-		let mut seed = seed & 0b00000011;
+	pub const fn set_seed(&mut self, seed: Seed) {
+		let mut seed = seed.to_u8();
 
 		seed <<= 0x6;
 
@@ -57,6 +57,7 @@ impl Block {
 		seed
 	}
 
+	#[allow(clippy::match_same_arms)]
 	#[inline]
 	#[must_use]
 	pub const fn tags(self) -> BlockTags {

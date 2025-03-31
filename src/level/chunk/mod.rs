@@ -13,5 +13,9 @@ pub struct Chunk {
 	/// The width of the chunk, relative to the map width.
 	pub width: f64,
 
+	/// Denotes whether players can spawn in the chunk.
+	pub is_spawnable: bool,
+
+	/// The layers of the chunk.
 	pub layers: Cow<'static, [Layer]>,
 }
