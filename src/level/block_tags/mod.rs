@@ -21,71 +21,71 @@ pub struct BlockTags(u32);
 
 impl BlockTags {
 	/// The block has no tags.
-	pub const NONE:     Self = Self(0b00000000_00000000_00000000_00000000);
+	pub const NONE:        Self = Self(0b00000000_00000000_00000000_00000000);
 
 	/// The block is not affected by gravity.
-	pub const STATIC:   Self = Self(0b00000000_00000000_00000000_00000001);
+	pub const STATIC:      Self = Self(0b00000000_00000000_00000000_00000001);
 
 	/// The block is a liquid.
-	pub const LIQUID:   Self = Self(0b00000000_00000000_00000000_00000010);
+	pub const LIQUID:      Self = Self(0b00000000_00000000_00000000_00000010);
 
 	/// The block is hot.
 	///
 	/// Some blocks may be affected by being in the vicinity of "hot" blocks.
-	pub const HOT:      Self = Self(0b00000000_00000000_00000000_00000100);
+	pub const HOT:         Self = Self(0b00000000_00000000_00000000_00000100);
 
 	/// The block is cold.
 	///
 	/// Some blocks may be affected by being in the vicinity of "cold" blocks.
-	pub const COLD:     Self = Self(0b00000000_00000000_00000000_00001000);
+	pub const COLD:        Self = Self(0b00000000_00000000_00000000_00001000);
 
 	/// The block does not affect collisions.
-	pub const EMPTY:    Self = Self(0b00000000_00000000_00000000_00010000);
+	pub const EMPTY:       Self = Self(0b00000000_00000000_00000000_00010000);
 
 	/// The block cannot be destroyed.
-	pub const DIVINE:   Self = Self(0b00000000_00000000_00000000_00100000);
+	pub const DIVINE:      Self = Self(0b00000000_00000000_00000000_00100000);
 
 	/// The block is partially affected by gravity.
 	///
-	/// The behaviour of sticky blocks overlap with that of statics and ordinary blocks; if a sticky block is physically connected to another block of the same material, then the two are not affected by gravity.
-	pub const STICKY:   Self = Self(0b00000000_00000000_00000000_01000000);
+	/// The behaviour of sticky blocks overlap with that of statics and ordinary blocks; if a sticky block is physically connected to another sticky block of the same material, then the two are not affected by gravity.
+	pub const STICKY:      Self = Self(0b00000000_00000000_00000000_01000000);
 
 	/// The block is burnt by hot blocks.
-	pub const BERNIE:   Self = Self(0b00000000_00000000_00000000_10000000);
+	pub const COMBUSTIBLE: Self = Self(0b00000000_00000000_00000000_10000000);
 
 	/// The block is evaporated by hot blocks.
-	pub const VOLATILE: Self = Self(0b00000000_00000000_00000001_00000000);
+	pub const VOLATILE:    Self = Self(0b00000000_00000000_00000001_00000000);
 
 	/// The block contains all tags.
-	pub const ALL:      Self = Self(0b11111111_11111111_11111111_11111111);
+	pub const ALL:         Self = Self(0b11111111_11111111_11111111_11111111);
 }
 
 impl BlockTags {
 	#[inline(always)]
 	#[must_use]
 	pub const fn union(self, other: Self) -> Self {
-		let value = self.0 | other.0;
+		let    value = self.0 | other.0;
 		Self(value)
 	}
 
 	#[inline(always)]
 	#[must_use]
 	pub const fn intersection(self, other: Self) -> Self {
-		let value = self.0 & other.0;
+		let    value = self.0 & other.0;
 		Self(value)
 	}
 
 	#[inline(always)]
 	#[must_use]
 	pub const fn difference(self, other: Self) -> Self {
-		let value = self.0.wrapping_sub(other.0);
+		let    value = self.0.wrapping_sub(other.0);
 		Self(value)
 	}
 
 	#[inline(always)]
 	#[must_use]
 	pub const fn symmetric_difference(self, other: Self) -> Self {
-		let value = self.0 ^ other.0;
+		let    value = self.0 ^ other.0;
 		Self(value)
 	}
 
@@ -104,7 +104,7 @@ impl BlockTags {
 }
 
 impl BitAnd for BlockTags {
-	type Output = Self;
+	type    Output = Self;
 
 	#[inline(always)]
 	fn bitand(self, rhs: Self) -> Self::Output {
@@ -120,7 +120,7 @@ impl BitAndAssign for BlockTags {
 }
 
 impl BitOr for BlockTags {
-	type Output = Self;
+	type    Output = Self;
 
 	#[inline(always)]
 	fn bitor(self, rhs: Self) -> Self::Output {
@@ -136,7 +136,7 @@ impl BitOrAssign for BlockTags {
 }
 
 impl BitXor for BlockTags {
-	type Output = Self;
+	type    Output = Self;
 
 	#[inline(always)]
 	fn bitxor(self, rhs: Self) -> Self::Output {
@@ -159,7 +159,7 @@ impl Debug for BlockTags {
 }
 
 impl Not for BlockTags {
-	type Output = Self;
+	type    Output = Self;
 
 	#[inline(always)]
 	fn not(self) -> Self::Output {
@@ -168,7 +168,7 @@ impl Not for BlockTags {
 }
 
 impl Sub for BlockTags {
-	type Output = Self;
+	type    Output = Self;
 
 	#[inline(always)]
 	fn sub(self, rhs: Self) -> Self::Output {

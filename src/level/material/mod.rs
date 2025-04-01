@@ -5,7 +5,7 @@ use crate::level::MaterialFromStrError;
 use std::mem::transmute;
 use std::str::FromStr;
 
-/// A material.
+/// A block material.
 ///
 /// Each [block](crate::level::Block) has an associated material that defines some of the block's properties.
 /// This type denotes the set of possible materials.

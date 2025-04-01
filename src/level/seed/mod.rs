@@ -4,11 +4,20 @@ use std::fmt::{self, Debug, Display, Formatter};
 use rand::Rng;
 use rand::distr::{Distribution, StandardUniform};
 
+/// A block seed.
+///
+/// Each [block](crate::level::Block) has contains a seed that defines the block's variant.
+/// Along with the block's [material](crate::level::Material), this seed defines the properties of the block.
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[rustc_layout_scalar_valid_range_end(0x3)]
 pub struct Seed(u8);
 
 impl Seed {
+	/// Creates a new block seed.
+	///
+	/// See [`new_unchecked`](Self::new_unchecked) for the unsafe version of this function.
+	///
+	/// The provided value must be in the range `0..=3`.
 	#[inline(always)]
 	#[must_use]
 	pub const fn new(value: u8) -> Option<Self> {
@@ -20,6 +29,13 @@ impl Seed {
 		Some(this)
 	}
 
+	/// Unsafely creates a new block seed.
+	///
+	/// See [`new`](Self::new) for the safe version of this function.
+	///
+	/// # Safety
+	///
+	/// The provided value must be in the range `0..=3`.
 	#[inline(always)]
 	#[must_use]
 	pub const unsafe fn new_unchecked(value: u8) -> Self {
@@ -28,6 +44,9 @@ impl Seed {
 		unsafe { Self(value) }
 	}
 
+	/// Converts the seed into `u8`.
+	///
+	/// The returned value is always in the range `0..=3`.
 	#[inline(always)]
 	#[must_use]
 	pub const fn to_u8(self) -> u8 {

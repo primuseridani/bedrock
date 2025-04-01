@@ -4,9 +4,7 @@
 
 #![feature(cold_path)]
 #![feature(default_field_values)]
-#![feature(f16)]
 #![feature(generic_arg_infer)]
-#![feature(portable_simd)]
 #![feature(rustc_attrs)]
 
 extern crate self as bedrock;

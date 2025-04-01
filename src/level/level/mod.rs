@@ -21,6 +21,6 @@ pub struct Level {
 impl Default for Level {
 	#[inline(always)]
 	fn default() -> Self {
-		Self::LAKE
+		Self::LAVA_LAKE
 	}
 }

@@ -97,6 +97,6 @@ impl ApplicationHandler<UserEvent> for App {
 
 	fn memory_warning(&mut self, _event_loop: &ActiveEventLoop) {
 		log!("got low memory warning");
-		log!(note, "we don't know what to do");
+		log!(note, "we don't know what to do about it");
 	}
 }

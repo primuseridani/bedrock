@@ -5,5 +5,4 @@ pub(super) enum UserEvent {
 	RedrawMap,
 
 	Terminate,
-
 }

@@ -98,15 +98,15 @@ macro_rules! def_is {
 }
 
 def_is! {
-	is_none:     NONE,
-	is_static:   STATIC,
-	is_liquid:   LIQUID,
-	is_hot:      HOT,
-	is_cold:     COLD,
-	is_emtpy:    EMPTY,
-	is_divine:   DIVINE,
-	is_sticky:   STICKY,
-	is_bernie:   BERNIE,
-	is_volatile: VOLATILE,
-	is_any:      ALL,
+	is_none:        NONE,
+	is_static:      STATIC,
+	is_liquid:      LIQUID,
+	is_hot:         HOT,
+	is_cold:        COLD,
+	is_emtpy:       EMPTY,
+	is_divine:      DIVINE,
+	is_sticky:      STICKY,
+	is_combustible: COMBUSTIBLE,
+	is_volatile:    VOLATILE,
+	is_any:         ALL,
 }

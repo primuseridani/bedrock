@@ -87,7 +87,14 @@ impl InitGraphicsContext {
 		log!(debug, "creating device and queue");
 
 		let (device, queue) = {
-			match block_on(adapter.request_device(&Default::default())) {
+			let descriptor = wgpu::DeviceDescriptor {
+				label:        Some("device"),
+				memory_hints: wgpu::MemoryHints::MemoryUsage,
+
+				..Default::default()
+			};
+
+			match block_on(adapter.request_device(&descriptor, None)) {
 				Ok((device, queue)) => (device, queue),
 
 				Err(e) => panic!("unable to find device: {e}"),

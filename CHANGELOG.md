@@ -3,6 +3,16 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-3
+
+* Change default level back to `lava_lake`
+* Revert `f16` usage for shaders
+* Remove Cargo lock from gitignore
+* Remove `wgpu` as submodule
+* Fix invalid veretx layout
+* Update docs
+* Rename `BERNIE` block tag to `COMBUSTIBLE`
+
 ## 0.5.0-2
 
 * Add `is_spawnable` flag to chunks
