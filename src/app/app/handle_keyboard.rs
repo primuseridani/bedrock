@@ -15,9 +15,13 @@ impl App {
 		event:         KeyEvent,
 		_is_synthetic: bool,
 	) {
-		if event.repeat { return };
+		if event.repeat {
+			return;
+		}
 
-		if matches!(event.state, ElementState::Released) { return };
+		if matches!(event.state, ElementState::Released) {
+			return;
+		}
 
 		match event.physical_key {
 			PhysicalKey::Code(
@@ -31,11 +35,11 @@ impl App {
 					_ => unreachable!(),
 				};
 
-				let tps = self.config.tps.saturating_add_signed(off).max(0x1);
+				let tps = self.preset.tps.saturating_add_signed(off).max(0x1);
 
 				log!(note, "new tps is clamped at `{tps}`");
 
-				self.config.tps = tps;
+				self.preset.tps = tps;
 			}
 
 			PhysicalKey::Code(KeyCode::Escape) => {

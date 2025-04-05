@@ -57,6 +57,7 @@ impl App {
 
 			data_dir: Self::get_data_dir()?,
 			config:   Default::default(),
+			preset:   Default::default(),
 			level:    Default::default(),
 
 			map:     Default::default(),

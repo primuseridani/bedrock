@@ -99,14 +99,14 @@ impl App {
 
 		assert!(self.level.chunks.len() <= u8::MAX as usize);
 
-		self.map.resize(self.config.map_size);
+		self.map.resize(self.preset.map_size);
 
 		roll_seeds(&mut self.map);
 
 		generate_columns(
 			self.map.columns_mut(),
 			&self.level,
-			self.config.map_size,
+			self.preset.map_size,
 		);
 
 		fill_bedrock(&mut self.map);

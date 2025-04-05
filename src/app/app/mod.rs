@@ -11,12 +11,12 @@ mod respawn_players;
 mod run;
 mod tick;
 
-use crate::app::UserEvent;
-use crate::config::Config;
+use crate::app::{Config, UserEvent};
 use crate::graphics::GraphicsContext;
 use crate::level::Level;
 use crate::map::Map;
-use crate::player::Player;
+use crate::player::PlayerList;
+use crate::preset::Preset;
 
 use std::path::PathBuf;
 use std::time::Instant;
@@ -33,10 +33,11 @@ pub struct App {
 
 	data_dir: PathBuf,
 	config:   Config,
+	preset:   Preset,
 	level:    Level,
 
 	map:     Map,
-	players: Vec<Player>,
+	players: PlayerList,
 
 	raw_view_scale: f64,
 

@@ -83,7 +83,7 @@ impl App {
 
 			log!(note, "new x pan is unclamped at `{pan}`");
 
-			let pan = pan.clamp(0x0, self.config.map_size.width() - 0x1);
+			let pan = pan.clamp(0x0, self.preset.map_size.width() - 0x1);
 
 			log!(note, "new x pan is clamped to `{pan}`");
 
@@ -102,7 +102,7 @@ impl App {
 
 		log!(note, "new y pan is unclamped at `{pan}`");
 
-		let pan = pan.clamp(0x0, self.config.map_size.height() - 0x1);
+		let pan = pan.clamp(0x0, self.preset.map_size.height() - 0x1);
 
 		log!(note, "new y pan is clamped to `{pan}`");
 

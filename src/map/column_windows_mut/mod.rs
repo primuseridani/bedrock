@@ -37,7 +37,9 @@ impl<'a> ColumnWindowsMut<'a> {
 	#[inline]
 	#[must_use]
 	pub fn next(&mut self) -> Option<[&'a mut Block; 0x2]> {
-		if self.is_empty() { return None };
+		if self.is_empty() {
+			return None;
+		}
 
 		// SAFETY: `ptr` is always within bounds if `len`
 		// is non-null.

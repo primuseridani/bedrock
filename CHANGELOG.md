@@ -3,6 +3,15 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-4
+
+* Add player tokens `Pawn`, `Bicycle`, `Train`, `Boot`, `Dog`, `Tank`, `Cannon`, `Duck`, and `Wastebasket`
+* Add player teams
+* Add `friendly_fire` flag to configurations
+* Add `addr`, `name` and `password` fields to configuration
+* Add base for network support
+* Reconfigure release profile
+
 ## 0.5.0-3
 
 * Change default level back to `lava_lake`

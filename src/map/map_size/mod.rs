@@ -1,9 +1,13 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
+use crate::error::DecodeError;
+
+use oct::decode::{self, Decode};
+use oct::encode::{Encode, SizedEncode};
 use std::hint::assert_unchecked;
 use std::num::NonZero;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Encode, SizedEncode)]
 pub struct MapSize {
 	width:  NonZero<u32>,
 	height: NonZero<u32>,
@@ -13,15 +17,12 @@ impl MapSize {
 	#[inline(always)]
 	#[must_use]
 	pub const fn new(width: u32, height: u32) -> Option<Self> {
-		if width  % 0x2 != 0x0 { return None };
-		if height % 0x2 != 0x0 { return None };
-
-		if width  == 0x0 { return None };
-		if height == 0x0 { return None };
+		if width  % 0x2 != 0x0 || width  == 0x0 { return None };
+		if height % 0x2 != 0x0 || height == 0x0 { return None };
 
 		// FIXME(const-hacks): We cannot try in constant
 		// expressions.
-		if width.checked_mul(height).is_none() {
+		if height.checked_mul(width).is_none() {
 			return None;
 		}
 
@@ -98,6 +99,18 @@ impl MapSize {
 		// SAFETY: We always guarantee that the product
 		// does not overflow `u32`.
 		unsafe { width.unchecked_mul(height) }
+	}
+}
+
+impl Decode for MapSize {
+	type Error = DecodeError;
+
+	fn decode(input: &mut decode::Input) -> Result<Self, Self::Error> {
+		let Ok(width)  = u32::decode(input);
+		let Ok(height) = u32::decode(input);
+
+		Self::new(width, height)
+			.ok_or_else(|| DecodeError::new("unable to decode map size"))
 	}
 }
 

@@ -17,7 +17,7 @@ impl App {
 
 		self.players.clear();
 
-		self.players.push(Default::default());
+		self.players.insert(Default::default());
 
 		self.regenerate_level();
 

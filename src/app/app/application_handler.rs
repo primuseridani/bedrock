@@ -64,7 +64,7 @@ impl ApplicationHandler<UserEvent> for App {
 		if Instant::now() >= self.next_tick {
 			cold_path();
 
-			self.next_tick = Instant::now() + Duration::from_nanos(1_000_000_000 / u64::from(self.config.tps));
+			self.next_tick = Instant::now() + Duration::from_nanos(1_000_000_000 / u64::from(self.preset.tps));
 
 			self.tick();
 

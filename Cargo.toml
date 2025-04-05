@@ -1,6 +1,6 @@
 [package]
 name       = "bedrock"
-version    = "0.5.0-3"
+version    = "0.5.0-4"
 authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition    = "2024"
 repository = "https://mandelbrot.dk/achernar/bedrock/"
@@ -13,9 +13,11 @@ toml     = "0.8"
 wgpu     = "24.0"
 winit    = "0.30"
 
+conststr = { version = "0.3", features = ["oct"] }
+oct      = { version = "0.22", features = ["proc-macro"]}
 polywave = { version = "0.8", features = ["zerocopy"] }
 serde    = { version = "1.0", features = ["derive"] }
-zerocopy = { version = "0.8", features = ["derive", "float-nightly"] }
+zerocopy = { version = "0.8", features = ["derive"] }
 
 [target.'cfg(not(target_env = "msvc"))'.dependencies]
 tikv-jemallocator = "0.6"
@@ -172,10 +174,11 @@ wildcard_dependencies              = "forbid"
 zero_prefixed_literal              = "allow"
 
 [profile.release]
+opt-level     = 3
+strip         = "none"
+lto           = "fat"
+panic         = "abort"
 codegen-units = 1
-
-lto       = "fat"
-opt-level = 3
 
 [workspace]
 exclude = ["wgpu"]
