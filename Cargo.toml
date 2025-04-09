@@ -1,9 +1,13 @@
+# Copyright 2025 Gabriel Bjørnager Jensen.
+
 [package]
-name       = "bedrock"
-version    = "0.5.0-4"
-authors    = ["Achernar", "Gabriel Bjørnager Jensen"]
-edition    = "2024"
-repository = "https://mandelbrot.dk/achernar/bedrock/"
+name        = "bedrock"
+version     = "0.5.0-5"
+authors     = ["Achernar", "Gabriel Bjørnager Jensen"]
+edition     = "2024"
+description = "Artillery game."
+readme      = "README.md"
+repository  = "https://mandelbrot.dk/achernar/bedrock/"
 
 [dependencies]
 ctrlc    = "3.4"
@@ -14,7 +18,7 @@ wgpu     = "24.0"
 winit    = "0.30"
 
 conststr = { version = "0.3", features = ["oct"] }
-oct      = { version = "0.22", features = ["proc-macro"]}
+oct      = { version = "0.23", features = ["proc-macro"] }
 polywave = { version = "0.8", features = ["zerocopy"] }
 serde    = { version = "1.0", features = ["derive"] }
 zerocopy = { version = "0.8", features = ["derive"] }
@@ -116,7 +120,7 @@ needless_raw_strings               = "warn"
 new_without_default                = "allow"
 no_effect_underscore_binding       = "forbid"
 no_mangle_with_rust_abi            = "forbid"
-non_ascii_literal                  = "forbid"
+non_ascii_literal                  = "deny"
 nonstandard_macro_braces           = "forbid"
 option_as_ref_cloned               = "warn"
 option_if_let_else                 = "warn"

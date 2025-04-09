@@ -3,6 +3,12 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-5
+
+* Add manual
+* Update gitignore
+* Update readme
+
 ## 0.5.0-4
 
 * Add player tokens `Pawn`, `Bicycle`, `Train`, `Boot`, `Dog`, `Tank`, `Cannon`, `Duck`, and `Wastebasket`

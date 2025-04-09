@@ -2,7 +2,7 @@
 
 use crate::error::DecodeError;
 use crate::message::{ChatMessage, LobbyPassword, Username};
-use crate::player::Team;
+use crate::player::{Team, Token};
 use crate::preset::Preset;
 
 use oct::decode::Decode;
@@ -27,4 +27,6 @@ pub enum Message {
 	Start,
 
 	ChangeTeam(Team),
+
+	ChangeToken(Token),
 }

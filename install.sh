@@ -13,7 +13,7 @@ fi
 
 if ! [ -e "target/release/bedrock" ]
 then
-	echo "executable has not bee build"
+	echo "executable has not been build"
 	echo "note: build using \`cargo +nightly build --release\`"
 
 	exit

@@ -1,0 +1,231 @@
+\documentclass[a5paper, twoside]{report}
+
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks, pdfusetitle]{hyperref}
+\usepackage{lastpage}
+\usepackage{mdframed}
+\usepackage{multicol}
+\usepackage{parskip}
+\usepackage{tgtermes}
+\usepackage[center]{titlesec}
+\usepackage{varwidth}
+
+\author{Achernar}
+\title{The Bedrock Manual}
+\date{2025-04-07}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\pagestyle{fancy}
+\fancypagestyle{plain}{\pagestyle{fancy}}
+\fancyhf{}
+\fancyhead[lo,re]{\small\bfseries\thechapter.\ \MakeUppercase{\leftmark}}
+\fancyfoot[lo,re]{\small\bfseries \thepage\ / \pageref*{LastPage}}
+
+\titleformat{\chapter}{\flushright\huge\bfseries}{}{0pt}{\thechapter.\ }[]
+\titleformat{\section}{\large\bfseries}{}{0pt}{\thesection.\ }[]
+\titleformat{\subsection}{\centering\small\bfseries}{}{0pt}{\thesubsection.\ }[]
+
+\titlespacing*{\chapter}{0pt}{0pt}{0pt}
+\titlespacing*{\section}{0pt}{0.5cm}{0.5cm}
+\titlespacing*{\subsection}{0pt}{0.25cm}{0.25cm}
+
+\setlength{\columnsep}{1cm}
+
+\newcommand*{\rulewidth}{0pt}
+\renewcommand*{\headrulewidth}{\rulewidth}
+\renewcommand*{\footrulewidth}{\rulewidth}
+
+\begin{document}
+	\thispagestyle{empty}
+	\pagenumbering{gobble}
+
+	\begin{center}
+		\vspace*{\fill}
+		{\large\bfseries The}
+
+		{\huge\bfseries Bedrock Manual}
+
+		{\large\bfseries 0.5}
+
+		\vspace*{\fill}
+		{\small Copyright \textcopyright\ 2025 Gabriel Bjørnager Jensen}
+	\end{center}
+
+	\clearpage
+	\pagenumbering{arabic}
+
+	\tableofcontents
+	\addcontentsline{toc}{chapter}{\numberline{\thechapter}\contentsname}
+
+	\clearpage
+	\chapter{Introduction}
+		\textit{Bedrock} is an artillery video game developed at Achernar.
+
+		This manual describes the basics of the game, including how to set it up, how gameplay works, and more.
+
+		\section{Technical specifications}
+			\begin{mdframed}
+				\small\itshape\bfseries
+				Note: Bedrock is still early in its development, and not all platforms may yet have been thoroughly tested.
+			\end{mdframed}
+
+			\subsection{Machine architecture}
+				Bedrock requires at least \texttt{32} bits per memory address.
+				So far, Bedrock has been tested to work on AMD64 (x86-64) machines, and support is therefore also expected on IA-32 (specifically i686-compatible variants).
+				Other architectures have not been tested yet.
+
+			\subsection{Operating system}
+				Bedrock is written to support UNIX-compatible systems as well as Microsoft Windows.
+				So far, however, only Linux has been tested (specifically Arch Linux).
+
+			\subsection{Graphics interface}
+				Bedrock can make use of any of the following windowing protocols, depending on the target operating system:
+
+				\begin{multicols}{2}
+					\begin{itemize}
+						\item{Cocoa}
+						\item{Orbital}
+						\item{X}
+						\item{Wayland}
+						\item{Win32}
+					\end{itemize}
+				\end{multicols}
+
+				Additionally, rendering is done using any of the following interfaces:
+
+				\begin{multicols}{2}
+					\begin{itemize}
+						\item{Direct3D}
+						\item{Metal}
+						\item{OpenGL}
+						\item{Vulkan}
+					\end{itemize}
+				\end{multicols}
+
+		\section{Contact}
+			For support regarding Bedrock, please write an e-mail to Achernar at:
+
+			\begin{mdframed}
+				\ttfamily
+				gabriel@achernar.io
+			\end{mdframed}
+
+	\clearpage
+	\chapter{Installation}
+		This chapter will go over the different ways of installing Bedrock.
+
+		\section{Arch Linux}
+			Use the official PKGBUILD file at:
+
+			\begin{mdframed}
+				\url{https://mandelbrot.dk/pkgbuild/bedrock.git}
+			\end{mdframed}
+
+		\section{From sources}
+			This section will guide you on how to install Bedrock from its sources.
+			Instructions must be done in a terminal emulator.
+
+			\subsection{Prerequisites}
+				The following, other programmes must be installed on the host system when building Bedrock from sources:
+
+				\begin{multicols}{2}
+					\begin{itemize}
+						\item{Git}
+						\item{The rustc compiler}
+						\item{The Cargo build system}
+					\end{itemize}
+				\end{multicols}
+
+				See \url{https://git-scm.com/downloads/} on how to install Git.
+				See \url{https://www.rust-lang.org/} for information on how to install the Rust programming language.
+
+			\subsection{Getting the sources}
+				The repositories containing the sources for Bedrock may be any of:
+
+				\begin{mdframed}
+					\url{https://mandelbrot.dk/achernar/bedrock.git}
+
+					\url{https://gitlab.com/primuseridani/bedrock.git}
+
+					\url{https://github.com/primuseridani/bedrock.git}
+				\end{mdframed}
+
+				Instruct Git to download the desired repository:
+
+				\begin{mdframed}
+					\ttfamily
+					git clone -{}-depth 0 \textit{repository}
+				\end{mdframed}
+
+				... wherein \textit{repository} is the address of the Bedrock repository.
+				Git will then unpack the repository into a \texttt{bedrock} directory relative to the current working directory.
+
+			\subsection{Building}
+				Once downloaded, the sources must be compiled into the final executable.
+
+				Change the working directory into the newly-created \texttt{bedrock} directory:
+
+				\begin{mdframed}
+					\ttfamily
+					cd bedrock
+				\end{mdframed}
+
+				And then invoke Cargo via:
+
+				\begin{mdframed}
+					\ttfamily
+					cargo build -{}-release
+				\end{mdframed}
+
+				When compilation has finished -- which can take quite some time -- the final binary should be located inside a new \texttt{target} directory.
+
+			\subsection{Installation, UNIX\textsuperscript{\textregistered}}
+				Finally, the installation script \texttt{install.sh} can be used to install the executable, along with some other files:
+
+				\begin{mdframed}
+					\ttfamily
+					./install.sh \textit{base\_directory}
+				\end{mdframed}
+
+				... wherein \texttt{\itshape base\_directory} denotes a custom root directory.
+				The script will then populate the following subdirectories of the specified root directory:
+
+				\begin{itemize}
+					\ttfamily
+
+					\item{usr/bin}
+					\item{usr/share/applications}
+					\item{usr/share/pixmaps}
+				\end{itemize}
+
+				\begin{mdframed}
+					\small\itshape\bfseries
+					Hint: Remember to take note of the script's output, as this may be needed when uninstalling Bedrock.
+				\end{mdframed}
+
+			\subsection{Installation, Windows\textsuperscript{\textregistered}}
+				Currently, Bedrock does not provide an out-of-the-box, automated means of installation on Microsoft Windows systems.
+
+	\clearpage
+	\chapter{Acknowledgements}
+		\section{Bedrock}
+			Bedrock is copyright \copyright\ 2025 Gabriel Bjørnager Jensen.
+			All rights reserved.
+
+		\section{The Bedrock Manual}
+			This manual is copyright \textcopyright\ 2025 Gabriel Bjørnager Jensen.
+			It is licensed under a Creative Commons Attribution-ShareAlike 4.0 International licence.
+			See \url{https://creativecommons.org/licenses/by-sa/4.0/} for more information.
+
+		\section{Trade marks}
+			Cocoa, \nobreak{MacOS}, and Metal are registered trade marks of Apple Inc. in the E.U.;
+			Linux is a registered trade mark of Linus Benedict Torvalds in the E.U.;
+			OpenGL is a registered trade mark of Hewlett Packard Enterprise Development LP in the E.U.;
+			UNIX and X are registered trade marks of the Open Group Limited in the E.U.;
+			Vulkan is a registered trade mark of the Khronos Group Inc. in the E.U.;
+			Windows is a registered trade mark of Microsoft Corporation in the E.U.
+\end{document}
