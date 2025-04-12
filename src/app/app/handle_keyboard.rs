@@ -35,7 +35,11 @@ impl App {
 					_ => unreachable!(),
 				};
 
-				let tps = self.preset.tps.saturating_add_signed(off).max(0x1);
+				let tps = self
+					.preset
+					.tps
+					.saturating_add_signed(off)
+					.max(0x1);
 
 				log!(note, "new tps is clamped at `{tps}`");
 

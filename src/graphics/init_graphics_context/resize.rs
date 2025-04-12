@@ -15,20 +15,38 @@ impl InitGraphicsContext {
 
 		self.surface.configure(&self.device, &self.surface_config);
 
-		let (x_factor, y_factor) = if width >= height {
-			let x_factor = 1.0;
-			let y_factor = f64::from(height) / f64::from(width);
+		// Normally, the viewport would stretch the scene
+		// to fit the display (window). We want to preserve
+		// the original aspect ratio and do therefore our
+		// own stretching beforehand.
 
-			(x_factor, y_factor)
-		} else {
-			let x_factor = f64::from(width) / f64::from(height);
-			let y_factor = 1.0;
+		let x_factor = f64::from(width) / f64::from(height);
+		let y_factor = x_factor.recip();
 
-			(x_factor, y_factor)
-		};
+		let (x_factor, y_factor) = (width >= height).select_unpredictable(
+			(     1.0, y_factor),
+			(x_factor,      1.0),
+		);
 
-		let x_radius = (x_factor / 2.0 * 3.0) as f32;
-		let y_radius = (y_factor / 2.0 * 3.0) as f32;
+		// We would prefer having exactly one triangle that
+		// coveres the entire viewport:
+		//
+		// ***XXXXXXX***
+		//  **X     X**
+		//   *X     X*
+		//    XXXXXXX
+		//     *****
+		//      ***
+		//       *
+
+		let [x_radius, y_radius] = [x_factor, y_factor]
+			.map(|factor| {
+				let radius = factor
+					.algebraic_div(2.0)
+					.algebraic_mul(3.0);
+
+				radius as f16
+			});
 
 		let clip_top             = Vec2::new( 0.0,  3.0);
 		let clip_bottom_left     = Vec2::new(-3.0, -3.0);

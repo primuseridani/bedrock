@@ -6,6 +6,7 @@ mod handle_mouse_wheel;
 mod init;
 mod load_level;
 mod main;
+mod print_welcome_message;
 mod regenerate_level;
 mod respawn_players;
 mod run;

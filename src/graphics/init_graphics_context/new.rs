@@ -87,14 +87,26 @@ impl InitGraphicsContext {
 		log!(debug, "creating device and queue");
 
 		let (device, queue) = {
+			let features = {
+				use wgpu::Features;
+
+				let mut features = Features::empty();
+
+				features |= Features::ADDRESS_MODE_CLAMP_TO_BORDER;
+				features |= Features::SHADER_F16;
+
+				features
+			};
+
 			let descriptor = wgpu::DeviceDescriptor {
-				label:        Some("device"),
-				memory_hints: wgpu::MemoryHints::MemoryUsage,
+				label:             Some("device"),
+				required_features: features,
+				memory_hints:      wgpu::MemoryHints::MemoryUsage,
 
 				..Default::default()
 			};
 
-			match block_on(adapter.request_device(&descriptor, None)) {
+			match block_on(adapter.request_device(&descriptor)) {
 				Ok((device, queue)) => (device, queue),
 
 				Err(e) => panic!("unable to find device: {e}"),
@@ -156,8 +168,11 @@ impl InitGraphicsContext {
 
 		let texture_sampler = {
 			let descriptor = wgpu::SamplerDescriptor {
-				label:        Some("texture sampler"),
-				border_color: Some(wgpu::SamplerBorderColor::OpaqueBlack),
+				label:          Some("texture sampler"),
+				address_mode_u: wgpu::AddressMode::ClampToBorder,
+				address_mode_v: wgpu::AddressMode::ClampToBorder,
+				address_mode_w: wgpu::AddressMode::ClampToBorder,
+				border_color:   Some(wgpu::SamplerBorderColor::OpaqueBlack),
 
 				..Default::default()
 			};

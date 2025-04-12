@@ -118,7 +118,7 @@ fn get_raw_pan(base: u32, raw_factor: f32, view_scale: u32) -> u32 {
 	let pan_factor = (raw_factor.ceil() as i32).clamp(-0x1, 0x1);
 
 	#[expect(clippy::cast_possible_wrap)]
-	let pan_distance = ((view_scale / 0x10) as i32) * pan_factor;
+	let pan_distance = ((view_scale / 0x20) as i32) * pan_factor;
 
 	base.saturating_add_signed(pan_distance)
 }

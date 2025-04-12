@@ -9,9 +9,11 @@ var texture: texture_2d<f32>;
 var texture_sampler: sampler;
 
 @fragment
-//@must_use
+@must_use
 fn fragment_main(
 	input: VertexOutput,
 ) -> @location(0x0) vec4<f32> {
-	return textureSample(texture, texture_sampler, input.texture);
+	let texture_coordinate = input.texture;
+
+	return textureSample(texture, texture_sampler, texture_coordinate);
 }

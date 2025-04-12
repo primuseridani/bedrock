@@ -3,7 +3,6 @@
 use crate::app::App;
 use crate::error::{Error, Result};
 use crate::log::log;
-use crate::version::Version;
 
 use std::env::home_dir;
 use std::fs::{create_dir_all, write};
@@ -12,29 +11,8 @@ use std::time::Instant;
 use winit::event_loop::{ControlFlow, EventLoop};
 
 impl App {
-	pub fn run() -> Result<()> {
-		eprintln!();
-		eprintln!("\u{001B}[001mYOU HAVE NOW HIT BEDROCK!\u{001B}[022m");
-		eprintln!("\u{001B}[002mbedrock-{}\u{001B}[022m", Version::CURRENT);
-		eprintln!();
-		eprintln!("\u{001B}[002mCopyright \u{00A9} 2025 Gabriel Bj\u{00F8}rnager Jensen.\u{001B}[022m");
-		eprintln!();
-		eprintln!("Controls (en-gb):");
-		eprintln!("  esc                : pause / unpause");
-		eprintln!("  q                  : quit (whilst paused)");
-		eprintln!();
-		eprintln!("  mwheelup           : pan right");
-		eprintln!("  mwheeldown         : pan left");
-		eprintln!("  mwheel2up OR");
-		eprintln!("  shift + mwheelup   : pan up");
-		eprintln!("  mwheel2down OR");
-		eprintln!("  shift + mwheeldown : pan down");
-		eprintln!("  ctrl + mwheelup    : zoom in");
-		eprintln!("  ctrl + mwheeldown  : zoom out");
-		eprintln!();
-		eprintln!("  plus               : increas tps");
-		eprintln!("  hyphen             : decrease tps");
-		eprintln!();
+	pub(super) fn run() -> Result<()> {
+		Self::print_welcome_message();
 
 		log!(debug, "creating event loop");
 

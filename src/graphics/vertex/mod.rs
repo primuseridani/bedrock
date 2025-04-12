@@ -21,17 +21,17 @@ impl Vertex {
 			wgpu::VertexAttribute {
 				offset:          offset_of!(Self, clip) as wgpu::BufferAddress,
 				shader_location: 0x0,
-				format:          wgpu::VertexFormat::Float32x2,
+				format:          wgpu::VertexFormat::Float16x2,
 			},
 
 			wgpu::VertexAttribute {
 				offset:          offset_of!(Self, texture) as wgpu::BufferAddress,
 				shader_location: 0x1,
-				format:          wgpu::VertexFormat::Float32x2,
+				format:          wgpu::VertexFormat::Float16x2,
 			},
 		],
 	};
 }
 
 const _: () = assert!(Vertex::LAYOUT.attributes[0x0].offset == 0x0);
-const _: () = assert!(Vertex::LAYOUT.attributes[0x1].offset == 0x8);
+const _: () = assert!(Vertex::LAYOUT.attributes[0x1].offset == 0x4);

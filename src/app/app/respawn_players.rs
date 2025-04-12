@@ -19,7 +19,7 @@ impl App {
 
 		log!(
 			note,
-			"there are `{}` spawn chunk(s) in level \"{}\"",
+			"there is/are `{}` spawn chunk(s) in level \"{}\"",
 			spawn_chunks.len(),
 			self.level.name,
 		);

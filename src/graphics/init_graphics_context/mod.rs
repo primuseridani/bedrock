@@ -32,7 +32,13 @@ pub struct InitGraphicsContext {
 impl InitGraphicsContext {
 	const DEFAULT_SIZE: (u32, u32) = (0x280, 0x1E0);
 
-	const TEXTURE_WIDTH: u32 = 0x200;
+	const TEXTURE_WIDTH: u32 = {
+		if Self::DEFAULT_SIZE.0 >= Self::DEFAULT_SIZE.1 {
+			Self::DEFAULT_SIZE.1
+		} else {
+			Self::DEFAULT_SIZE.0
+		}
+	};
 
 	const TEXTURE_EXTENT: wgpu::Extent3d = wgpu::Extent3d {
 		width:                 Self::TEXTURE_WIDTH,
