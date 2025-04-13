@@ -2,7 +2,7 @@
 
 [package]
 name        = "bedrock"
-version     = "0.5.0-6"
+version     = "0.5.0-7"
 authors     = ["Achernar", "Gabriel Bjørnager Jensen"]
 edition     = "2024"
 description = "Artillery game."
@@ -176,6 +176,9 @@ verbose_bit_mask                   = "warn"
 verbose_file_reads                 = "warn"
 wildcard_dependencies              = "forbid"
 zero_prefixed_literal              = "allow"
+
+[profile.dev]
+overflow-checks = false
 
 [profile.release]
 opt-level     = 3

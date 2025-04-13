@@ -6,7 +6,6 @@
 #![feature(const_try)]
 #![feature(default_field_values)]
 #![feature(f16)]
-#![feature(float_algebraic)]
 #![feature(generic_arg_infer)]
 #![feature(rustc_attrs)]
 #![feature(select_unpredictable)]

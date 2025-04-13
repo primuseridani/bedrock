@@ -1,5 +1,7 @@
 \documentclass[a5paper, twoside]{report}
 
+\usepackage{array}
+\usepackage{arydshln}
 \usepackage[english]{babel}
 \usepackage{fancyhdr}
 \usepackage[T1]{fontenc}
@@ -8,6 +10,8 @@
 \usepackage{lastpage}
 \usepackage{mdframed}
 \usepackage{multicol}
+\usepackage{multirow}
+\usepackage{nameref}
 \usepackage{parskip}
 \usepackage{tgtermes}
 \usepackage[center]{titlesec}
@@ -15,7 +19,7 @@
 
 \author{Achernar}
 \title{The Bedrock Manual}
-\date{2025-04-07}
+\date{2025-04-12}
 
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
@@ -41,9 +45,11 @@
 
 \begin{document}
 	\thispagestyle{empty}
-	\pagenumbering{gobble}
+	\pagenumbering{gobble}cent
 
 	\begin{center}
+		{\small\ttfamily bedrock 0.5.0-7}
+
 		\vspace*{\fill}
 		{\large\bfseries The}
 
@@ -57,17 +63,18 @@
 
 	\clearpage
 	\pagenumbering{arabic}
-
 	\tableofcontents
+		\label{content}
 	\addcontentsline{toc}{chapter}{\numberline{\thechapter}\contentsname}
 
 	\clearpage
 	\chapter{Introduction}
+		\label{intro}
 		\textit{Bedrock} is an artillery video game developed at Achernar.
 
 		This manual describes the basics of the game, including how to set it up, how gameplay works, and more.
 
-		\section{Technical specifications}
+		\section{Technical requirements}
 			\begin{mdframed}
 				\small\itshape\bfseries
 				Note: Bedrock is still early in its development, and not all platforms may yet have been thoroughly tested.
@@ -116,102 +123,151 @@
 
 	\clearpage
 	\chapter{Installation}
+		\label{install}
 		This chapter will go over the different ways of installing Bedrock.
 
+		{\small\itshape\bfseries Note: For manually installing Bedrock from sourcs, please refer to the ``\nameref{dev}'' chapter.}
+
 		\section{Arch Linux}
+			\label{install:arch}
 			Use the official PKGBUILD file at:
 
 			\begin{mdframed}
 				\url{https://mandelbrot.dk/pkgbuild/bedrock.git}
 			\end{mdframed}
 
-		\section{From sources}
-			This section will guide you on how to install Bedrock from its sources.
-			Instructions must be done in a terminal emulator.
+		\section{Other systems}
+			\label{install:other}
+			Please refer to the \textit{\nameref{dev}} chapter.
 
-			\subsection{Prerequisites}
-				The following, other programmes must be installed on the host system when building Bedrock from sources:
+	\clearpage
+	\chapter{Gameplay}
+		\label{gameplay}
+		Bedrock is of the ``artillery'' genre, a subgenre of strategy games.
 
-				\begin{multicols}{2}
-					\begin{itemize}
-						\item{Git}
-						\item{The rustc compiler}
-						\item{The Cargo build system}
-					\end{itemize}
-				\end{multicols}
+		In short: The objective of the ``game'' is to explode your friends.
 
-				See \url{https://git-scm.com/downloads/} on how to install Git.
-				See \url{https://www.rust-lang.org/} for information on how to install the Rust programming language.
+		\section{Controls}
+			\label{gameplay:controls}
+			Characters are controled using the keyboard.
+			Joypad support is planned for the future.
+			Controls are identical for each player.
 
-			\subsection{Getting the sources}
-				The repositories containing the sources for Bedrock may be any of:
+			\begin{figure}[h!]
+				\begin{tabular}{lcl:l}
+					\multicolumn{3}{>{\bfseries}c}{Input} & \multicolumn{1}{>{\bfseries}c}{Action} \\
+					\hline
+					ESC   &   &                      & Pause game \\
+					Q     &   &                      & Quit game \\
+					      &   &                      & \\
+					CTRL  & + & MWheel $\uparrow$    & Zoom in \\
+					CTRL  & + & MWheel $\downarrow$  & Zoom out \\
+					Shift & + & MWheel $\uparrow$    & \multirow{2}*{Pan up} \\
+					      &   & MWheel $\leftarrow$  & \\
+					Shift & + & MWheel $\downarrow$  & \multirow{2}*{Pan down} \\
+					      &   & MWheel $\rightarrow$ & \\
+					      &   &                      & \\
+					+     &   &                      & Increase TPS \\
+					-     &   &                      & Derease TPS \\
+					\hline
+				\end{tabular}
+			\end{figure}
 
-				\begin{mdframed}
-					\url{https://mandelbrot.dk/achernar/bedrock.git}
+	\clearpage
+	\chapter{Development}
+		\label{dev}
+		This section will guide you on how to retrieve the sources for Bedrock, and how to use these sources.
+		Instructions must sometimes be done in a terminal emulator.
 
-					\url{https://gitlab.com/primuseridani/bedrock.git}
+		\section{Prerequisites}
+			\label{dev:prerequisites}
+			The following, other programmes must be installed on the host system when building Bedrock from sources:
 
-					\url{https://github.com/primuseridani/bedrock.git}
-				\end{mdframed}
-
-				Instruct Git to download the desired repository:
-
-				\begin{mdframed}
-					\ttfamily
-					git clone -{}-depth 0 \textit{repository}
-				\end{mdframed}
-
-				... wherein \textit{repository} is the address of the Bedrock repository.
-				Git will then unpack the repository into a \texttt{bedrock} directory relative to the current working directory.
-
-			\subsection{Building}
-				Once downloaded, the sources must be compiled into the final executable.
-
-				Change the working directory into the newly-created \texttt{bedrock} directory:
-
-				\begin{mdframed}
-					\ttfamily
-					cd bedrock
-				\end{mdframed}
-
-				And then invoke Cargo via:
-
-				\begin{mdframed}
-					\ttfamily
-					cargo build -{}-release
-				\end{mdframed}
-
-				When compilation has finished -- which can take quite some time -- the final binary should be located inside a new \texttt{target} directory.
-
-			\subsection{Installation, UNIX\textsuperscript{\textregistered}}
-				Finally, the installation script \texttt{install.sh} can be used to install the executable, along with some other files:
-
-				\begin{mdframed}
-					\ttfamily
-					./install.sh \textit{base\_directory}
-				\end{mdframed}
-
-				... wherein \texttt{\itshape base\_directory} denotes a custom root directory.
-				The script will then populate the following subdirectories of the specified root directory:
-
+			\begin{multicols}{2}
 				\begin{itemize}
-					\ttfamily
-
-					\item{usr/bin}
-					\item{usr/share/applications}
-					\item{usr/share/pixmaps}
+					\item{Git}
+					\item{The rustc compiler}
+					\item{The Cargo build system}
 				\end{itemize}
+			\end{multicols}
 
-				\begin{mdframed}
-					\small\itshape\bfseries
-					Hint: Remember to take note of the script's output, as this may be needed when uninstalling Bedrock.
-				\end{mdframed}
+			See \url{https://git-scm.com/downloads/} on how to install Git.
+			See \url{https://www.rust-lang.org/} for information on how to install the Rust programming language.
 
-			\subsection{Installation, Windows\textsuperscript{\textregistered}}
-				Currently, Bedrock does not provide an out-of-the-box, automated means of installation on Microsoft Windows systems.
+		\section{Getting the sources}
+			\label{dev:source}
+			The repositories containing the sources for Bedrock may be any of:
+
+			\begin{mdframed}
+				\url{https://mandelbrot.dk/achernar/bedrock.git}
+
+				\url{https://gitlab.com/primuseridani/bedrock.git}
+
+				\url{https://github.com/primuseridani/bedrock.git}
+			\end{mdframed}
+
+			Instruct Git to download the desired repository:
+
+			\begin{mdframed}
+				\ttfamily
+				git clone -{}-depth 0 \textit{repository}
+			\end{mdframed}
+
+			... wherein \textit{repository} is the address of the Bedrock repository.
+			Git will then unpack the repository into a \texttt{bedrock} directory relative to the current working directory.
+
+		\section{Building}
+			\label{dev:building}
+			Once downloaded, the sources must be compiled into the final executable.
+
+			Change the working directory into the newly-created \texttt{bedrock} directory:
+
+			\begin{mdframed}
+				\ttfamily
+				cd bedrock
+			\end{mdframed}
+
+			And then invoke Cargo via:
+
+			\begin{mdframed}
+				\ttfamily
+				cargo build -{}-release
+			\end{mdframed}
+
+			When compilation has finished -- which can take quite some time -- the final binary should be located inside a new \texttt{target} directory.
+
+		\section{Installation, UNIX\textsuperscript{\textregistered}}
+			\label{dev:unix-install}
+			Finally, the installation script \texttt{install.sh} can be used to install the executable, along with some other files:
+
+			\begin{mdframed}
+				\ttfamily
+				./install.sh \textit{base\_directory}
+			\end{mdframed}
+
+			... wherein \texttt{\itshape base\_directory} denotes a custom root directory.
+			The script will then populate the following subdirectories of the specified root directory:
+
+			\begin{itemize}
+				\ttfamily
+
+				\item{usr/bin}
+				\item{usr/share/applications}
+				\item{usr/share/pixmaps}
+			\end{itemize}
+
+			\begin{mdframed}
+				\small\itshape\bfseries
+				Hint: Remember to take note of the script's output, as this may be needed when uninstalling Bedrock.
+			\end{mdframed}
+
+		\section{Installation, Windows\textsuperscript{\textregistered}}
+			\label{dev:windows-install}
+			Currently, Bedrock does not provide an out-of-the-box, automated means of installation on Microsoft Windows systems.
 
 	\clearpage
 	\chapter{Acknowledgements}
+		\label{acknowledge}
 		\section{Bedrock}
 			Bedrock is copyright \copyright\ 2025 Gabriel Bjørnager Jensen.
 			All rights reserved.

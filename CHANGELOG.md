@@ -3,6 +3,13 @@
 This is the changelog of Bedrock.
 See `README.md` for more information.
 
+## 0.5.0-7
+
+* Update manual
+* Add "watch" script for manual rendering
+* Revert pan control changes
+* Refactor graphics
+
 ## 0.5.0-6
 
 * Again enable `f16` in shaders

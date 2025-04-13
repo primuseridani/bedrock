@@ -1,12 +1,11 @@
 // Copyright 2025 Gabriel Bjørnager Jensen.
 
-use crate::graphics::{InitGraphicsContext, Vertex, MAIN_SHADER};
+use crate::graphics::{InitGraphicsContext, Vertex};
 
 use crate::log::log;
 use crate::version::Version;
 
 use pollster::block_on;
-use std::borrow::Cow;
 use std::pin::Pin;
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::dpi::PhysicalSize;
@@ -133,7 +132,7 @@ impl InitGraphicsContext {
 		let shader = {
 			let descriptor = wgpu::ShaderModuleDescriptor {
 				label:  Some("shader"),
-				source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(MAIN_SHADER)),
+				source: Self::MAIN_SHADER,
 			};
 
 			device.create_shader_module(descriptor)

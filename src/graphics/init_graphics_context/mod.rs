@@ -6,6 +6,7 @@ mod render_frame;
 mod resize;
 
 use polywave::www::Html;
+use std::borrow::Cow;
 use std::pin::Pin;
 use winit::window::Window;
 
@@ -46,7 +47,9 @@ impl InitGraphicsContext {
 		depth_or_array_layers: 0x1,
 	};
 
-	#[inline(always)]
+	const MAIN_SHADER: wgpu::ShaderSource<'_> = get_main_shader();
+
+	#[inline]
 	pub fn redraw_window(&mut self) {
 		self.window.request_redraw();
 	}
@@ -56,7 +59,17 @@ impl InitGraphicsContext {
 	#[must_use]
 	pub const fn size(&self) -> (u32, u32) {
 		let wgpu::SurfaceConfiguration { width, height, .. } = self.surface_config;
-
 		(width, height)
 	}
+}
+
+const fn get_main_shader() -> wgpu::ShaderSource<'static> {
+	let contents = concat!(
+		include_str!("../prelude.wgsl"),
+		include_str!("../main.vert.wgsl"),
+		include_str!("../main.frag.wgsl"),
+	);
+
+	let contents =  Cow::Borrowed(contents);
+	wgpu::ShaderSource::Wgsl(contents)
 }

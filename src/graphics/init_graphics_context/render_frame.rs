@@ -4,7 +4,6 @@ use crate::graphics::InitGraphicsContext;
 
 use polywave::www::Html;
 use std::iter;
-use zerocopy::IntoBytes;
 
 impl InitGraphicsContext {
 	pub fn render_frame(&mut self, background: Html) {
@@ -40,22 +39,6 @@ impl InitGraphicsContext {
 
 			output.texture.create_view(&descriptor)
 		};
-
-		self.queue.write_texture(
-			wgpu::TexelCopyTextureInfo {
-				texture:   &self.texture,
-				mip_level: 0x0,
-				origin:    wgpu::Origin3d::ZERO,
-				aspect:    wgpu::TextureAspect::All,
-			},
-			self.texture_buf.as_bytes(),
-			wgpu::TexelCopyBufferLayout {
-				offset:         0x0,
-				bytes_per_row:  Some(size_of::<Html>() as u32 * Self::TEXTURE_WIDTH),
-				rows_per_image: Some(Self::TEXTURE_WIDTH),
-			},
-			Self::TEXTURE_EXTENT,
-		);
 
 		let mut encoder = {
 			let descriptor = wgpu::CommandEncoderDescriptor {

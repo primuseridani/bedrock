@@ -40,13 +40,7 @@ impl InitGraphicsContext {
 		//       *
 
 		let [x_radius, y_radius] = [x_factor, y_factor]
-			.map(|factor| {
-				let radius = factor
-					.algebraic_div(2.0)
-					.algebraic_mul(3.0);
-
-				radius as f16
-			});
+			.map(|factor| (factor * const { 1.0 / 2.0 * 3.0 }) as f16);
 
 		let clip_top             = Vec2::new( 0.0,  3.0);
 		let clip_bottom_left     = Vec2::new(-3.0, -3.0);

@@ -5,6 +5,7 @@ use crate::level::{Block, Material};
 use crate::map::Map;
 
 use polywave::www::Html;
+use zerocopy::IntoBytes;
 
 impl InitGraphicsContext {
 	pub fn draw_map(&mut self, map: &Map, (pan_x, pan_y): (u32, u32), scale: u32) {
@@ -40,6 +41,22 @@ impl InitGraphicsContext {
 				self.texture_buf[index] = colour;
 			}
 		}
+
+		self.queue.write_texture(
+			wgpu::TexelCopyTextureInfo {
+				texture:   &self.texture,
+				mip_level: 0x0,
+				origin:    wgpu::Origin3d::ZERO,
+				aspect:    wgpu::TextureAspect::All,
+			},
+			self.texture_buf.as_bytes(),
+			wgpu::TexelCopyBufferLayout {
+				offset:         0x0,
+				bytes_per_row:  Some(size_of::<Html>() as u32 * Self::TEXTURE_WIDTH),
+				rows_per_image: Some(Self::TEXTURE_WIDTH),
+			},
+			Self::TEXTURE_EXTENT,
+		);
 	}
 }
 

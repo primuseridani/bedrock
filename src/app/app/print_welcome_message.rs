@@ -18,10 +18,8 @@ impl App {
 		eprintln!("  mwheelup           : pan right");
 		eprintln!("  mwheeldown         : pan left");
 		eprintln!("  mwheel2up OR");
-		eprintln!("  shift + mwheelup");
-		eprintln!("  alt   + mwheelup   : pan up");
+		eprintln!("  shift + mwheelup   : pan up");
 		eprintln!("  mwheel2down OR");
-		eprintln!("  alt + mwheeldown");
 		eprintln!("  shift + mwheeldown : pan down");
 		eprintln!("  ctrl + mwheelup    : zoom in");
 		eprintln!("  ctrl + mwheeldown  : zoom out");
